@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Dividendos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Lista de Dividendos</h2>
+        
+        <!-- Total Geral de Dividendos -->
+        <div class="alert alert-info text-center">
+            <h4>Total Geral de Dividendos Recebidos: R$ {{ total_geral_dividendos }}</h4>
+        </div>
+
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="dividendosTab" role="tablist">
+            {% for codigo_ativo in dividendos_por_codigo.keys() %}
+            <li class="nav-item">
+                <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ codigo_ativo }}" data-toggle="tab" href="#{{ codigo_ativo }}" role="tab" aria-controls="{{ codigo_ativo }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                    {{ codigo_ativo }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Tab Panes -->
+        <div class="tab-content" id="dividendosTabContent">
+            {% for codigo_ativo, dividendos in dividendos_por_codigo.items() %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ codigo_ativo }}" role="tabpanel" aria-labelledby="tab-{{ codigo_ativo }}">
+                <h3 class="mt-4">{{ codigo_ativo }}</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                            <th>Valor</th>
+                            <th>Valor Total</th>
+                            <th>Valor Total Líquido</th>
+                            <th>Data Com</th>
+                            <th>Data Pagamento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dividendo in dividendos %}
+                        <tr>
+                            <td>{{ dividendo[2] }}</td>
+                            <td>{{ dividendo[5] }}</td>
+                            <td>{{ dividendo[6] }}</td>
+                            <td>{{ dividendo[7] }}</td>
+                            <td>{{ dividendo[8] }}</td>
+                            <td>{{ dividendo[9] }}</td>
+                            <td>{{ dividendo[10] }}</td>
+                            <td>{{ dividendo[11] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" class="text-right"><strong>Total de Dividendos:</strong></td>
+                            <td><strong>R$ {{ total_dividendos_por_codigo[codigo_ativo] }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

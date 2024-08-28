@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Ativo - Essentia Invest</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #graficoPizza {
+            width: 300px; 
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Ativos: {{ classe_ativo.replace('_', ' ').title() }}</h2>
+
+        <h3 class="mt-5">Ativos Cadastrados</h3>
+        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#cadastrarModal">
+            Adicionar Novo Ativo
+        </button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome do Ativo</th>
+                    <th>Nota do Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ativo in ativos %}
+                    <tr>
+                        <td>{{ ativo[0] }}</td>
+                        <td>{{ ativo[1] }}</td>
+                        <td>
+                            <!-- Botão para abrir o modal de edição -->
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal{{ loop.index }}">
+                                Editar
+                            </button>
+
+                            <!-- Botão para abrir o modal de exclusão -->
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#excluirModal{{ loop.index }}">
+                                Excluir
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Modal de Edição -->
+                    <div class="modal fade" id="editarModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarModalLabel{{ loop.index }}">Editar Ativo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ url_for('editar_ativo') }}" method="POST">
+                                        <input type="hidden" name="classe_ativo" value="{{ classe_ativo }}">
+                                        <input type="hidden" name="nome_ativo" value="{{ ativo[0] }}">
+                                        <div class="form-group">
+                                            <label for="nome_ativo">Nome do Ativo:</label>
+                                            <input type="text" class="form-control" id="nome_ativo{{ loop.index }}" name="nome_ativo" value="{{ ativo[0] }}" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nota_ativo">Nota do Ativo:</label>
+                                            <input type="number" class="form-control" id="nota_ativo{{ loop.index }}" name="nota_ativo" step="0.01" value="{{ ativo[1] }}" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal de Exclusão -->
+                    <div class="modal fade" id="excluirModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="excluirModalLabel{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="excluirModalLabel{{ loop.index }}">Excluir Ativo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="{{ url_for('excluir_ativo') }}" method="POST">
+                                    <input type="hidden" name="classe_ativo" value="{{ classe_ativo }}">
+                                    <input type="hidden" name="nome_ativo" value="{{ ativo[0] }}">
+                                    <div class="modal-body">
+                                        <p>Tem certeza que deseja excluir o ativo <strong>{{ ativo[0] }}</strong>?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Excluir</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+                <tr>
+                    <td><strong>Soma das Notas: </strong></td>
+                    <td>{{ soma_notas }}</td>
+                    <td> - </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Gráfico de Pizza -->
+        <h3 class="mt-5">Distribuição Ideal de Ativos</h3>
+        <div class="text-center" style="width: 500px; height: 500px;">
+            <canvas id="graficoPizza"></canvas>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div class="modal fade" id="cadastrarModal" tabindex="-1" role="dialog" aria-labelledby="cadastrarModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cadastrarModalLabel">Cadastrar Novo Ativo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('cadastrar_ativos', classe_ativo=classe_ativo) }}" method="POST">
+                        <div class="form-group">
+                            <label for="nome_ativo">Nome do Ativo:</label>
+                            <input type="text" class="form-control" id="nome_ativo" name="nome_ativo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nota_ativo">Nota do Ativo:</label>
+                            <input type="number" class="form-control" id="nota_ativo" name="nota_ativo" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dados do gráfico
+        var ativos = {{ ativos|tojson }};
+        var soma_notas = {{ soma_notas }};
+
+        var nomesAtivos = ativos.map(function(ativo) {
+            return ativo[0];
+        });
+
+        var notasAtivos = ativos.map(function(ativo) {
+            return ativo[1];
+        });
+
+        // Configuração do gráfico
+        var ctx = document.getElementById('graficoPizza').getContext('2d');
+        var graficoPizza = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: nomesAtivos,
+                datasets: [{
+                    data: notasAtivos,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var valor = tooltipItem.raw;
+                                var percentual = ((valor / soma_notas) * 100).toFixed(2);
+                                return nomesAtivos[tooltipItem.dataIndex] + ': ' + percentual + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

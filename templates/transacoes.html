@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Transações</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Lista de Transações</h2>
+
+        <div class="container mt-5">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="alert alert-info">
+                        <h4>Total de Compras: <p>R$ {{ totais.compras }}</p></h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="alert alert-info">
+                        <h4>Total de Bonificações: <p>R$ {{ totais.bonificacoes }}</p></h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="alert alert-info">
+                        <h4>Total de Vendas: <p>R$ {{ totais.vendas }}</p></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info text-center">
+            <h4>Total de Movimentação: <p>R$ {{ total_movimentacao }}</p></h4>
+        </div>
+
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="transacoesTab" role="tablist">
+            {% for codigo_ativo in transacoes.keys() %}
+            <li class="nav-item">
+                <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ codigo_ativo }}" data-toggle="tab" href="#{{ codigo_ativo }}" role="tab" aria-controls="{{ codigo_ativo }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                    {{ codigo_ativo }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Tab Panes -->
+        <div class="tab-content" id="transacoesTabContent">
+            {% for codigo_ativo, dados in transacoes.items() %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ codigo_ativo }}" role="tabpanel" aria-labelledby="tab-{{ codigo_ativo }}">
+                <h3 class="mt-4">{{ codigo_ativo }}</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Data Operação</th>
+                            <th>Categoria</th>
+                            <th>Código Ativo</th>
+                            <th>Operação</th>
+                            <th>Quantidade</th>
+                            <th>Preço Unitário</th>
+                            <th>Corretora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transacao in dados.transacoes %}
+                        <tr>
+                            <td>{{ transacao[2] }}</td>
+                            <td>{{ transacao[3] }}</td>
+                            <td>{{ transacao[4] }}</td>
+                            <td>{{ transacao[5] }}</td>
+                            <td>{{ transacao[6] }}</td>
+                            <td>{{ transacao[7] }}</td>
+                            <td>{{ transacao[8] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

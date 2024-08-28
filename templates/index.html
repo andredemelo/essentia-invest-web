@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essentia Invest - Gerencie seus investimentos com base em fundamentos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/index/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Essentia Invest"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('cadastro') }}" class="nav-link">Cadastro</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Banner / Seção de Destaque -->
+    <section class="banner">
+        <div class="container text-center">
+            <h1 class="display-4">Gerencie seus investimentos com base em fundamentos.</h1>
+            <p class="lead">A essência do sucesso financeiro.</p>
+            <p>Essentia Invest ajuda você a focar nos aspectos essenciais do seu portfólio financeiro.</p>
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Comece agora</a>
+        </div>
+    </section>
+
+    <!-- Benefícios Principais -->
+    <section class="benefits">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Gerenciamento Simplificado</h3>
+                    <p>Organize seus investimentos de forma fácil e intuitiva.</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>Análise Baseada em Dados</h3>
+                    <p>Obtenha insights profundos com base em dados fundamentais.</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>Ferramentas de Decisão</h3>
+                    <p>Utilize ferramentas avançadas para decisões informadas.</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>Metas Personalizadas</h3>
+                    <p>Defina metas financeiras personalizadas e acompanhe seu progresso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container text-center">
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Termos de Serviço</a></li>
+                <li class="list-inline-item"><a href="#">Política de Privacidade</a></li>
+            </ul>
+            <p>&copy; 2024 Essentia Invest. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
