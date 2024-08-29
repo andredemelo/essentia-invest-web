@@ -38,13 +38,13 @@ def consulta_balanceamento_carteira(session):
             else:
                 if ativo[1] == 'SUL AMERICA EXCLUSIVE FI RF REF DI' :
                     quantidade = 231.89
-                    preco_medio = 110.77
+                    preco_medio = 98.52
                 elif ativo[1] == 'TREND DI FIC FI RF SIMPLES':
                     quantidade = 7316.53
-                    preco_medio = 1.25
+                    preco_medio = 1.24
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
                     quantidade = 555.75
-                    preco_medio = 1.42
+                    preco_medio = 1.35
             
             nota = ativo[2]
             preco_atual = ativo[3]
