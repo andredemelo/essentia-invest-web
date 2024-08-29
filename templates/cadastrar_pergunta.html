@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perguntas de Avaliação</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Perguntas de Avaliação - {{ classe_ativo.replace('_', ' ').title() }}</h2>
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalCadastrar">Cadastrar Nova Pergunta</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Identificador</th>
+                    <th>Pergunta</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pergunta in perguntas %}
+                <tr>
+                    <td>{{ pergunta[3] }}</td>
+                    <td>{{ pergunta[4] }}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalEditar{{ pergunta[0] }}">Editar</button>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalExcluir{{ pergunta[0] }}">Excluir</button>
+                    </td>
+                </tr>
+
+                <!-- Modal para Editar -->
+                <div class="modal fade" id="modalEditar{{ pergunta[0] }}" tabindex="-1" role="dialog" aria-labelledby="modalEditarLabel{{ pergunta[0] }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarLabel{{ pergunta[0] }}">Editar Pergunta</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="/editar_pergunta/{{ pergunta[0] }}/{{ pergunta[2] }}" method="POST">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="identificador">Identificador</label>
+                                        <input type="text" class="form-control" name="identificador" value="{{ pergunta[3] }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="texto_pergunta">Pergunta</label>
+                                        <textarea class="form-control" name="texto_pergunta" required>{{ pergunta[4] }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para exclusão -->
+                <div class="modal fade" id="modalExcluir{{ pergunta[0] }}" tabindex="-1" role="dialog" aria-labelledby="modalExcluirLabel{{ pergunta[0] }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="excluirModalLabel">Excluir Alocação</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="/excluir_pergunta/{{ pergunta[0] }}/{{ pergunta[2] }}" method="POST">
+                                <div class="modal-body">
+                                    <p>Tem certeza de que deseja excluir o identificador <strong>{{ pergunta[3] }}</strong>?</p>
+                                    <input type="hidden" name="id" value="{{ pergunta[0] }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para Cadastrar -->
+    <div class="modal fade" id="modalCadastrar" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCadastrarLabel">Cadastrar Nova Pergunta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/cadastrar_pergunta/{{classe_ativo}}" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="identificador">Identificador</label>
+                            <input type="text" class="form-control" name="identificador" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="texto_pergunta">Pergunta</label>
+                            <textarea class="form-control" name="texto_pergunta" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

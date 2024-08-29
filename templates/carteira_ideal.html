@@ -34,6 +34,7 @@
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}">Editar</button>
                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#excluirModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}">Excluir</button>
                         <a class="btn btn-success btn-sm" href="{{ url_for('cadastrar_ativos', classe_ativo=alocacao[0]) }}">Cadastrar Ativo</a>
+                        <a class="btn btn-success btn-sm" href="{{ url_for('pergunta', classe_ativo=alocacao[0]) }}">Cadastrar Pergunta Avaliação</a>
                     </td>
                 </tr>
                 {% endfor %}

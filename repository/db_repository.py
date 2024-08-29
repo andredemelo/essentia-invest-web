@@ -72,5 +72,15 @@ def cria_tabelas():
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
     ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS pergunta_avaliacao (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            classe_ativo TEXT NOT NULL,
+            identificador TEXT NOT NULL,
+            texto_pergunta TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES user(id)
+        )
+    ''')
     conn.commit()
     conn.close()

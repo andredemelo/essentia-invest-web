@@ -9,6 +9,7 @@ import service.carteira_ideal_service as carteira_ideal_service
 import service.balanceamento_carteira_service as balanceamento_carteira_service
 import service.transacao_service as transacao_service
 import service.dividendos_service as dividendos_service
+import service.pergunta_service as pergunta_service
 
 app = Flask(__name__)
 app.secret_key = 'EssentiaInvest'
@@ -49,11 +50,6 @@ def dashboard():
 def carteira_ideal():
     return carteira_ideal_service.consulta_carteira_ideal(session, request)
 
-@app.route('/carteira_ideal/cadastrar_ativos/<classe_ativo>', methods=['GET', 'POST'])
-@autenticacao_service.login_required
-def cadastrar_ativos(classe_ativo):
-    return carteira_ideal_service.cadastrar_ativos(classe_ativo, session, request)
-
 @app.route('/editar_alocacao', methods=['POST'])
 @autenticacao_service.login_required
 def editar_alocacao():
@@ -64,6 +60,11 @@ def editar_alocacao():
 def excluir_alocacao():
     return carteira_ideal_service.excluir_alocacao(session, request)
 
+@app.route('/carteira_ideal/cadastrar_ativos/<classe_ativo>', methods=['GET', 'POST'])
+@autenticacao_service.login_required
+def cadastrar_ativos(classe_ativo):
+    return carteira_ideal_service.cadastrar_ativos(classe_ativo, session, request)
+
 @app.route('/editar_ativo', methods=['POST'])
 @autenticacao_service.login_required
 def editar_ativo():
@@ -73,6 +74,26 @@ def editar_ativo():
 @autenticacao_service.login_required
 def excluir_ativo():
     return carteira_ideal_service.excluir_ativo(session, request)
+
+@app.route('/carteira_ideal/pergunta/<classe_ativo>', methods=['GET', 'POST'])
+@autenticacao_service.login_required
+def pergunta(classe_ativo):
+    return pergunta_service.cadastrar_pergunta(classe_ativo, session, request)
+
+@app.route('/cadastrar_pergunta/<classe_ativo>', methods=['POST'])
+@autenticacao_service.login_required
+def cadastrar_pergunta(classe_ativo):
+    return pergunta_service.cadastrar_pergunta(classe_ativo, session, request)
+
+@app.route('/editar_pergunta/<id>/<classe_ativo>', methods=['POST'])
+@autenticacao_service.login_required
+def editar_pergunta(id, classe_ativo):
+    return pergunta_service.editar_pergunta(request, id, classe_ativo)
+
+@app.route('/excluir_pergunta/<id>/<classe_ativo>', methods=['POST'])
+@autenticacao_service.login_required
+def excluir_pergunta(id, classe_ativo):
+    return pergunta_service.excluir_pergunta(id, classe_ativo)
 
 @app.route('/balanceamento_carteira', methods=['GET', 'POST'])
 @autenticacao_service.login_required
