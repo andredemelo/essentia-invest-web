@@ -40,7 +40,7 @@ def consulta_balanceamento_carteira(session):
                     quantidade = 231.89
                     preco_medio = 98.52
                 elif ativo[1] == 'TREND DI FIC FI RF SIMPLES':
-                    quantidade = 7316.53
+                    quantidade = 7499.14
                     preco_medio = 1.24
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
                     quantidade = 555.75
@@ -77,10 +77,12 @@ def consulta_balanceamento_carteira(session):
         porcentagem_ideal = porcentagem_ideal[0] if porcentagem_ideal else 0
         porcentagem_atual = (dados['total_valor'] / total_patrimonio) * 100 if total_patrimonio != 0 else 0
         necessidade_aporte = 'Aportar' if porcentagem_atual < porcentagem_ideal else 'Esperar'
+        diferenca_porcentagem = round(porcentagem_ideal - porcentagem_atual, 2)
         consolidado_classe[classe].update({
             'porcentagem_atual': round(porcentagem_atual, 2),
             'porcentagem_ideal': porcentagem_ideal,
-            'necessidade_aporte': necessidade_aporte
+            'necessidade_aporte': necessidade_aporte,
+            'diferenca_aporte': diferenca_porcentagem
         })
         soma_porcentagem_atual += porcentagem_atual
         soma_porcentagem_ideal += porcentagem_ideal
@@ -106,6 +108,9 @@ def consulta_balanceamento_carteira(session):
         # Adiciona Ação de Aportar ou Esperar
         necessidade_aporte = 'Aportar' if porcentagem_atual < porcentagem_ideal_atualizado else 'Esperar'
         ativo['necessidade_aporte'] = necessidade_aporte
+
+        diferenca_aporte = porcentagem_ideal_atualizado - porcentagem_atual
+        ativo['diferenca_aporte'] = round(diferenca_aporte, 2)
 
     return render_template('balanceamento_carteira.html', dados_ativos=dados_ativos, consolidado_classe=consolidado_classe, total_patrimonio=total_patrimonio,
                            soma_total_valor=soma_total_valor, soma_total_notas=soma_total_notas,

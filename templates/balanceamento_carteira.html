@@ -19,6 +19,7 @@
                     <th>Soma das Notas</th>
                     <th>% Atual</th>
                     <th>% Ideal</th>
+                    <th>Diferença</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -30,6 +31,9 @@
                     <td>{{ dados.total_notas }}</td>
                     <td>{{ dados.porcentagem_atual }} %</td>
                     <td>{{ dados.porcentagem_ideal }} %</td>
+                    <td class="font-weight-bold {% if dados.diferenca_aporte < 0 %}text-danger{% elif dados.diferenca_aporte > 0 %}text-success{% endif %}">
+                        {{ dados.diferenca_aporte }} %
+                    </td>
                     <td>{{ dados.necessidade_aporte }}</td>
                 </tr>
                 {% endfor %}
@@ -39,6 +43,7 @@
                     <td><strong>{{ soma_total_notas }}</strong></td>
                     <td><strong>{{ soma_porcentagem_atual }}</strong></td>
                     <td><strong>{{ soma_porcentagem_ideal }}</strong></td>
+                    <td> - </td>
                     <td> - </td>
                 </tr>
             </tbody>
@@ -72,6 +77,7 @@
                                     <th>Total Atual</th>
                                     <th>% Ideal</th>
                                     <th>% Atual</th>
+                                    <th>Diferença</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -89,6 +95,9 @@
                                     <td>R$ {{ ativo.total_atual }}</td>
                                     <td>{{ ativo.porcentagem_ideal }} %</td>
                                     <td>{{ ativo.porcentagem_atual }} %</td>
+                                    <td class="font-weight-bold {% if ativo.diferenca_aporte < 0 %}text-danger{% elif ativo.diferenca_aporte > 0 %}text-success{% endif %}">
+                                        {{ ativo.diferenca_aporte }} %
+                                    </td>
                                     <td>{{ ativo.necessidade_aporte }}</td>
                                 </tr>
                                 {% endfor %}
