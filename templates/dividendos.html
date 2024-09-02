@@ -11,9 +11,24 @@
     <div class="container mt-5">
         <h2 class="text-center">Lista de Dividendos</h2>
         
+        <div class="container mt-5">
+            <div class="row text-center">
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <h4>Total de Dividendos Recebidos: <p>R$ {{ total_geral_dividendos_recebidos }}</p></h4>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <h4>Total de Dividendos Provisionados: <p>R$ {{ total_geral_dividendos_provisionados }}</p></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Total Geral de Dividendos -->
         <div class="alert alert-info text-center">
-            <h4>Total Geral de Dividendos Recebidos: R$ {{ total_geral_dividendos }}</h4>
+            <h4>Total Geral de Dividendos: R$ {{ total_geral_dividendos }}</h4>
         </div>
 
         <!-- Nav Tabs -->
@@ -61,7 +76,15 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7" class="text-right"><strong>Total de Dividendos:</strong></td>
+                            <td colspan="7" class="text-right"><strong>Total de Dividendos Recebidos:</strong></td>
+                            <td><strong>R$ {{ total_dividendos_recebido_por_codigo[codigo_ativo] }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="text-right"><strong>Total de Dividendos Provisionados:</strong></td>
+                            <td><strong>R$ {{ total_dividendos_provisionado_por_codigo[codigo_ativo] }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="text-right"><strong>Total:</strong></td>
                             <td><strong>R$ {{ total_dividendos_por_codigo[codigo_ativo] }}</strong></td>
                         </tr>
                     </tfoot>

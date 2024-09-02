@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 import os
 import pandas as pd
@@ -56,21 +57,41 @@ def consulta_dividendos():
     
     dividendos_por_codigo = {}
     total_dividendos_por_codigo = {}
+    total_dividendos_recebido_por_codigo = {}
+    total_dividendos_provisionado_por_codigo = {}
     
     for dividendo in dividendos:
         codigo_ativo = dividendo[3]
         valor_total_liquido = dividendo[9]
+        data_pagamento = dividendo[11]
+        data_atual = datetime.now()
+
+        # Converte a data de pagamento para o formato datetime
+        data_pagamento_formatada = datetime.strptime(data_pagamento, "%d-%m-%Y")
         
         if codigo_ativo not in dividendos_por_codigo:
             dividendos_por_codigo[codigo_ativo] = []
             total_dividendos_por_codigo[codigo_ativo] = 0
+            total_dividendos_recebido_por_codigo[codigo_ativo] = 0
+            total_dividendos_provisionado_por_codigo[codigo_ativo] = 0
         
         dividendos_por_codigo[codigo_ativo].append(dividendo)
-        total_dividendos_por_codigo[codigo_ativo] += valor_total_liquido
+        total_dividendos_por_codigo[codigo_ativo] += round(valor_total_liquido, 2)
+        
+        # Comparar diretamente os objetos datetime
+        if data_pagamento_formatada <= data_atual:
+            total_dividendos_recebido_por_codigo[codigo_ativo] += round(valor_total_liquido, 2)
+        else:
+            total_dividendos_provisionado_por_codigo[codigo_ativo] += valor_total_liquido
     
     total_dividendos_por_codigo = {k: round(v, 2) for k, v in total_dividendos_por_codigo.items()}
     
-    # Calcula o total geral dos dividendos recebidos
+    # Calcula o total geral dos dividendos
     total_geral_dividendos = round(sum(total_dividendos_por_codigo.values()), 2)
+    total_geral_dividendos_recebidos = round(sum(total_dividendos_recebido_por_codigo.values()), 2)
+    total_geral_dividendos_provisionados = round(sum(total_dividendos_provisionado_por_codigo.values()), 2)
     
-    return render_template('dividendos.html', dividendos_por_codigo=dividendos_por_codigo, total_dividendos_por_codigo=total_dividendos_por_codigo, total_geral_dividendos=total_geral_dividendos)
+    return render_template('dividendos.html', dividendos_por_codigo=dividendos_por_codigo, total_dividendos_por_codigo=total_dividendos_por_codigo, 
+                            total_dividendos_recebido_por_codigo=total_dividendos_recebido_por_codigo, total_dividendos_provisionado_por_codigo=total_dividendos_provisionado_por_codigo,
+                            total_geral_dividendos=total_geral_dividendos, total_geral_dividendos_recebidos=total_geral_dividendos_recebidos, 
+                            total_geral_dividendos_provisionados=total_geral_dividendos_provisionados)
