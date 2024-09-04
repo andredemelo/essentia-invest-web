@@ -1,8 +1,9 @@
 from flask import render_template
-import sqlite3
+from datetime import datetime
 
 import repository.carteira_ideal_repository as carteira_ideal_repository
 import repository.transacao_repository as transacao_repository
+import repository.dividendos_repository as dividendos_repository
 
 def consulta_balanceamento_carteira(session):
     user_id = session['user_id']
@@ -52,6 +53,8 @@ def consulta_balanceamento_carteira(session):
             total_atual = preco_atual * quantidade if preco_atual else 0
             total_valor_classe += total_atual
             valor_diferenca = (preco_atual * quantidade) - (preco_medio * quantidade)
+            preco_justo_bazin = calcular_preco_justo_bazin(ticker)
+            print(f'Ativo: ' + ticker + ' Valor: ' + str(preco_justo_bazin))
             dados_ativos.append({
                 'classe': classe,
                 'ticker': ticker,
@@ -59,6 +62,7 @@ def consulta_balanceamento_carteira(session):
                 'preco_medio': round(preco_medio, 2),
                 'nota': nota,
                 'preco_atual': round(preco_atual, 2),
+                'preco_justo_bazin': round(preco_justo_bazin, 2),
                 'valor_diferenca': round(valor_diferenca, 2),
                 'total_atual': round(total_atual, 2),
                 'porcentagem_ideal': 0
@@ -96,7 +100,6 @@ def consulta_balanceamento_carteira(session):
         classe = ativo['classe']
         nota = ativo['nota']
         porcentagem_ideal = consolidado_classe[classe]['porcentagem_ideal']
-        total_notas_classe = consolidado_classe[classe]['total_notas']
         porcentagem_ideal_atualizado = round((nota * 100) / soma_total_notas, 2) if soma_total_notas != 0 else 0
         ativo['porcentagem_ideal'] = porcentagem_ideal_atualizado
 
@@ -143,3 +146,15 @@ def calcula_preco_medio(user_id, ticker):
             valor_total_compra = valor_total_compra - (preco * quantidade)
     
     return round(valor_total_compra / quantidade_total, 2)
+
+def calcular_preco_justo_bazin(ticker):
+    dividend_yield_desejado = 0.06
+    ano_consulta_dividendo = str(datetime.now().year - 1)
+    dividendos = dividendos_repository.consulta_dividendos_do_ano(ticker, ano_consulta_dividendo)
+
+    valor_dividendo_anual = 0.0
+    for dividendo in dividendos:
+        valor_dividendo = dividendo[0]
+        valor_dividendo_anual = valor_dividendo_anual + valor_dividendo
+    
+    return valor_dividendo_anual / dividend_yield_desejado

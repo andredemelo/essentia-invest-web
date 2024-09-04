@@ -73,6 +73,7 @@
                                     <th>Nota</th>
                                     <th>Preço Médio</th>
                                     <th>Preço Atual</th>
+                                    <th>Preço Justo Bazin</th>
                                     <th>Rentabilidade</th>
                                     <th>Total Atual</th>
                                     <th>% Ideal</th>
@@ -88,7 +89,8 @@
                                     <td>{{ ativo.quantidade }}</td>
                                     <td>{{ ativo.nota }}</td>
                                     <td>R$ {{ ativo.preco_medio }}</td>
-                                    <td>R$ {{ ativo.preco_atual if ativo.preco_atual else '0.0' }}</td>
+                                    <td>R$ {{ ativo.preco_atual }}</td>
+                                    <td>R$ {{ ativo.preco_justo_bazin }}</td>
                                     <td class="font-weight-bold {% if ativo.valor_diferenca < 0 %}text-danger{% elif ativo.valor_diferenca > 0 %}text-success{% endif %}">
                                         R$ {{ ativo.valor_diferenca }}
                                     </td>

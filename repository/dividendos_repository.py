@@ -37,3 +37,10 @@ def consulta_todos_dividendos():
     devidendos = cursor.fetchall()
     conn.close()
     return devidendos
+
+def consulta_dividendos_do_ano(ticker, ano_consulta_dividendo):
+    conn, cursor = db_repository.inicializa_conexao_db()
+    cursor.execute(""" SELECT valor FROM dividendo WHERE codigo_ativo = ? AND substr(data_pagamento, -4) = ? """, (ticker, ano_consulta_dividendo))
+    dividendos = cursor.fetchall()
+    conn.close()
+    return dividendos
