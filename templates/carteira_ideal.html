@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         #graficoPizza {
-            width: 300px; 
-            height: 300px;
+            width: 500px; 
+            height: 500px;
         }
     </style>
 </head>
@@ -22,6 +22,7 @@
                 <tr>
                     <th>Classe de Ativo</th>
                     <th>Porcentagem</th>
+                    <th>Dividendo Desejado</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -30,8 +31,9 @@
                 <tr>
                     <td>{{ alocacao[0].replace('_', ' ').title() }}</td>
                     <td>{{ alocacao[1] }}%</td>
+                    <td>{{ alocacao[2] }}%</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}">Editar</button>
+                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}" data-dividendo="{{ alocacao[2] }}">Editar</button>
                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#excluirModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}">Excluir</button>
                         <a class="btn btn-success btn-sm" href="{{ url_for('cadastrar_ativos', classe_ativo=alocacao[0]) }}">Cadastrar Ativo</a>
                         <a class="btn btn-success btn-sm" href="{{ url_for('pergunta', classe_ativo=alocacao[0]) }}">Cadastrar Pergunta Avaliação</a>
@@ -42,6 +44,7 @@
                     <td><strong>Total</strong></td>
                     <td><strong>{{ soma_total }}%</strong></td>
                     <td> - </td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
@@ -82,6 +85,10 @@
                             <label for="porcentagem_modal">Porcentagem:</label>
                             <input type="number" class="form-control" id="porcentagem_modal" name="porcentagem" step="0.01" required>
                         </div>
+                        <div class="form-group">
+                            <label for="dividendo_desejado_modal">Dividendo Desejado:</label>
+                            <input type="number" class="form-control" id="dividendo_desejado_modal" name="dividendo_desejado" step="0.01" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -111,6 +118,10 @@
                         <div class="form-group">
                             <label for="porcentagem_modal_editar">Porcentagem:</label>
                             <input type="number" class="form-control" id="porcentagem_modal_editar" name="porcentagem" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dividendo_desejado_editar">Dividendo Desejado:</label>
+                            <input type="number" class="form-control" id="dividendo_desejado_editar" name="dividendo_desejado" step="0.01" required>
                         </div>
                         <input type="hidden" id="classe_ativo_hidden_editar" name="classe_ativo_hidden">
                     </div>
@@ -158,35 +169,25 @@
         const labels = Object.keys(alocacoesJson);
         const data = Object.values(alocacoesJson);
 
-        const ctx = document.getElementById('graficoPizza').getContext('2d');
-        new Chart(ctx, {
+        var ctx = document.getElementById('graficoPizza').getContext('2d');
+        var graficoPizza = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: labels,
+                labels: Object.keys({{ alocacoes_json|tojson }}),
                 datasets: [{
-                    label: 'Alocação Ideal de Ativos',
-                    data: data,
+                    data: Object.values({{ alocacoes_json|tojson }}),
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(100, 100, 255, 0.2)',
-                        'rgba(200, 200, 200, 0.2)'
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
+                        '#C9CBCF',
+                        '#FF5733',
+                        '#33FF57',
+                        '#3357FF'
                     ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(100, 100, 255, 1)',
-                        'rgba(200, 200, 200, 1)'
-                    ],
-                    borderWidth: 1
                 }]
             },
             options: {
@@ -195,35 +196,29 @@
             }
         });
 
-        // Passa os dados do botão de edição para o modal
+        // Evento para abrir modal de edição com valores preenchidos
         $('#editarModal').on('show.bs.modal', function (event) {
-            const button = $(event.relatedTarget);
-            const classeAtivo = button.data('classe');
-            const porcentagem = button.data('porcentagem');
+            var button = $(event.relatedTarget);
+            var classeAtivo = button.data('classe');
+            var porcentagem = button.data('porcentagem');
+            var dividendo_desejado = button.data('dividendo');
 
-            const modal = $(this);
-            modal.find('.modal-title').text('Editar Alocação - ' + classeAtivo.replace('_', ' ').title());
-            modal.find('#classe_ativo_modal_editar').val(classeAtivo.replace('_', ' ').title());
-            modal.find('#porcentagem_modal_editar').val(porcentagem);
-            modal.find('#classe_ativo_hidden_editar').val(classeAtivo);
+            var modal = $(this);
+            modal.find('.modal-body #classe_ativo_modal_editar').val(classeAtivo);
+            modal.find('.modal-body #porcentagem_modal_editar').val(porcentagem);
+            modal.find('.modal-body #dividendo_desejado_editar').val(dividendo_desejado);
+            modal.find('.modal-body #classe_ativo_hidden_editar').val(classeAtivo);
         });
 
-        // Passa os dados do botão de exclusão para o modal
+        // Evento para abrir modal de exclusão com o valor correto
         $('#excluirModal').on('show.bs.modal', function (event) {
-            const button = $(event.relatedTarget);
-            const classeAtivo = button.data('classe');
+            var button = $(event.relatedTarget);
+            var classeAtivo = button.data('classe');
 
-            const modal = $(this);
-            modal.find('#classe_ativo_modal_excluir').text(classeAtivo.replace('_', ' ').title());
+            var modal = $(this);
+            modal.find('#classe_ativo_modal_excluir').text(classeAtivo);
             modal.find('#classe_ativo_hidden_excluir').val(classeAtivo);
         });
-
-        function abrirDropdown(id) {
-            var dropdownToggle = document.getElementById(id);
-            if (dropdownToggle) {
-                dropdownToggle.click();
-            }
-        }
     </script>
 </body>
 </html>

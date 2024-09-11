@@ -8,6 +8,8 @@ def consulta_carteira_ideal(session, request):
     if request.method == 'POST':
         classe_ativo = request.form['classe_ativo']
         porcentagem = float(request.form['porcentagem'])
+        dividendo_desejado = request.form['dividendo_desejado']
+        print(f'Porcentagem: ' + str(porcentagem))
 
         soma_porcentagem_atual = carteira_ideal_repository.consulta_soma_porcentagem(user_id)
 
@@ -22,7 +24,7 @@ def consulta_carteira_ideal(session, request):
             flash('A soma das porcentagens não pode ultrapassar 100%', 'danger')
         else:
             if porcentagem_existente:
-                carteira_ideal_repository.atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo)
+                carteira_ideal_repository.atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo, dividendo_desejado)
             else:
                 carteira_ideal_repository.inclui_porcentagem_classe_ativo(user_id, classe_ativo, porcentagem)
             flash('Alocação atualizada com sucesso!', 'success')
@@ -41,6 +43,7 @@ def editar_alocacao(session, request):
     user_id = session['user_id']
     classe_ativo = request.form['classe_ativo']
     porcentagem = float(request.form['porcentagem'])
+    dividendo_desejado = request.form['dividendo_desejado']
 
     soma_atual = carteira_ideal_repository.consulta_soma_porcentagem(user_id)
     porcentagem_existente = carteira_ideal_repository.consulta_porcentagem(user_id, classe_ativo)
@@ -53,7 +56,7 @@ def editar_alocacao(session, request):
     if nova_soma > 100:
         flash('A soma das porcentagens não pode ultrapassar 100%', 'danger')
     else:
-        carteira_ideal_repository.atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo)
+        carteira_ideal_repository.atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo, dividendo_desejado)
         flash('Alocação atualizada com sucesso!', 'success')
     
     return redirect('/carteira_ideal')
@@ -73,8 +76,9 @@ def cadastrar_ativos(classe_ativo, session, request):
     if request.method == 'POST':
         nome_ativo = request.form['nome_ativo']
         nota_ativo = request.form['nota_ativo']
+        dividendo_desejado = request.form['dividendo_desejado']
         
-        carteira_ideal_repository.inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo)
+        carteira_ideal_repository.inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado)
         
         flash('Ativo cadastrado com sucesso!', 'success')
         return redirect(url_for('cadastrar_ativos', classe_ativo=classe_ativo))

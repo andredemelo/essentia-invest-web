@@ -53,8 +53,8 @@ def consulta_balanceamento_carteira(session):
             total_atual = preco_atual * quantidade if preco_atual else 0
             total_valor_classe += total_atual
             valor_diferenca = (preco_atual * quantidade) - (preco_medio * quantidade)
-            preco_justo_bazin = calcular_preco_justo_bazin(ticker)
-            print(f'Ativo: ' + ticker + ' Valor: ' + str(preco_justo_bazin))
+            preco_justo_bazin = calcular_preco_justo_bazin(user_id, ticker, classe)
+            
             dados_ativos.append({
                 'classe': classe,
                 'ticker': ticker,
@@ -147,14 +147,20 @@ def calcula_preco_medio(user_id, ticker):
     
     return round(valor_total_compra / quantidade_total, 2)
 
-def calcular_preco_justo_bazin(ticker):
-    dividend_yield_desejado = 0.06
+def calcular_preco_justo_bazin(user_id, ticker, classe):
     ano_consulta_dividendo = str(datetime.now().year - 1)
     dividendos = dividendos_repository.consulta_dividendos_do_ano(ticker, ano_consulta_dividendo)
 
     valor_dividendo_anual = 0.0
     for dividendo in dividendos:
         valor_dividendo = dividendo[0]
-        valor_dividendo_anual = valor_dividendo_anual + valor_dividendo
+        valor_dividendo_anual += valor_dividendo
     
-    return valor_dividendo_anual / dividend_yield_desejado
+    dividend_yield_desejado = carteira_ideal_repository.consulta_dividendo_desejado_carteira_ideal(user_id, classe)[0]
+
+    if dividend_yield_desejado == 0:
+        return 0
+    
+    return valor_dividendo_anual / (dividend_yield_desejado / 100)
+
+    

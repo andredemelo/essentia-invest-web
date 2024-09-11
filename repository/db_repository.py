@@ -23,6 +23,7 @@ def cria_tabelas():
             user_id INTEGER NOT NULL,
             classe_ativo TEXT NOT NULL,
             porcentagem REAL NOT NULL,
+            dividendo_desejado REAL NOT NULL,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
     ''')

@@ -20,18 +20,25 @@ def inclui_porcentagem_classe_ativo(user_id, classe_ativo, porcentagem):
     conn.commit()
     conn.close()
 
-def atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo):
+def atualiza_porcentagem_classe_ativo(porcentagem, user_id, classe_ativo, dividendo_desejado):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('UPDATE carteira_ideal SET porcentagem = ? WHERE user_id = ? AND classe_ativo = ?', (porcentagem, user_id, classe_ativo))
+    cursor.execute('UPDATE carteira_ideal SET porcentagem = ?, dividendo_desejado = ? WHERE user_id = ? AND classe_ativo = ?', (porcentagem, dividendo_desejado, user_id, classe_ativo))
     conn.commit()
     conn.close()
 
 def consulta_alocacao_carteira_ideal(user_id):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('SELECT classe_ativo, porcentagem FROM carteira_ideal WHERE user_id = ?', (user_id,))
+    cursor.execute('SELECT classe_ativo, porcentagem, dividendo_desejado FROM carteira_ideal WHERE user_id = ?', (user_id,))
     alocacoes = cursor.fetchall()
     conn.close()
     return alocacoes
+
+def consulta_dividendo_desejado_carteira_ideal(user_id, classe_ativo):
+    conn, cursor = db_repository.inicializa_conexao_db()
+    cursor.execute('SELECT dividendo_desejado FROM carteira_ideal WHERE user_id = ? AND classe_ativo = ?', (user_id, classe_ativo))
+    dividendo = cursor.fetchone()
+    conn.close()
+    return dividendo
 
 def excluir_porcentagem_classe_ativo(user_id, classe_ativo):
     conn, cursor = db_repository.inicializa_conexao_db()
@@ -39,9 +46,9 @@ def excluir_porcentagem_classe_ativo(user_id, classe_ativo):
     conn.commit()
     conn.close()
 
-def inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo):
+def inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('INSERT INTO ativos_carteira_ideal (user_id, classe_ativo, nome_ativo, nota_ativo)  VALUES (?, ?, ?, ?)', (user_id, classe_ativo, nome_ativo, nota_ativo))
+    cursor.execute('INSERT INTO ativos_carteira_ideal (user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado)  VALUES (?, ?, ?, ?, ?)', (user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado))
     conn.commit()
     conn.close()
 
