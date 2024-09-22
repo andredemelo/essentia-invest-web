@@ -1,6 +1,8 @@
 from flask import render_template
 from datetime import datetime
 
+import math
+
 import repository.carteira_ideal_repository as carteira_ideal_repository
 import repository.transacao_repository as transacao_repository
 import repository.dividendos_repository as dividendos_repository
@@ -54,6 +56,7 @@ def consulta_balanceamento_carteira(session):
             total_valor_classe += total_atual
             valor_diferenca = (preco_atual * quantidade) - (preco_medio * quantidade)
             preco_justo_bazin = calcular_preco_justo_bazin(user_id, ticker, classe)
+            preco_justo_graham = calcula_preco_justo_benjamin_graham(user_id, ticker, classe)
             
             dados_ativos.append({
                 'classe': classe,
@@ -63,6 +66,7 @@ def consulta_balanceamento_carteira(session):
                 'nota': nota,
                 'preco_atual': round(preco_atual, 2),
                 'preco_justo_bazin': round(preco_justo_bazin, 2),
+                'preco_justo_graham': round(preco_justo_graham, 2),
                 'valor_diferenca': round(valor_diferenca, 2),
                 'total_atual': round(total_atual, 2),
                 'porcentagem_ideal': 0
@@ -163,4 +167,13 @@ def calcular_preco_justo_bazin(user_id, ticker, classe):
     
     return valor_dividendo_anual / (dividend_yield_desejado / 100)
 
-    
+def calcula_preco_justo_benjamin_graham(user_id, ticker, classe):
+    indicadores = carteira_ideal_repository.consulta_indicadores_ativo(user_id, classe, ticker)
+
+    lpa = 0
+    vpa = 0
+    for indicador in indicadores:
+        lpa = indicador[0]
+        vpa = indicador[1]
+
+    return math.sqrt(22.5 * lpa * vpa)

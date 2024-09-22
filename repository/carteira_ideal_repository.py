@@ -85,8 +85,15 @@ def consulta_preco_atual_ativo():
     conn.close()
     return ativos
 
-def atualiza_preco_atual_ativo(classe, ticker, preco):
+def atualiza_dados__ativo(classe, ticker, preco, lpa, vpa):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('UPDATE ativos_carteira_ideal SET preco_atual = ? WHERE nome_ativo = ? AND classe_ativo = ?', (preco, ticker, classe))
+    cursor.execute('UPDATE ativos_carteira_ideal SET preco_atual = ?, lpa = ?, vpa = ? WHERE nome_ativo = ? AND classe_ativo = ?', (preco, lpa, vpa, ticker, classe))
     conn.commit()
     conn.close()
+
+def consulta_indicadores_ativo(user_id, classe, ticker):
+    conn, cursor = db_repository.inicializa_conexao_db()
+    cursor.execute('SELECT lpa, vpa FROM ativos_carteira_ideal WHERE user_id = ? AND classe_ativo = ? AND nome_ativo = ?', (user_id, classe, ticker))
+    indicadores = cursor.fetchall()
+    conn.close()
+    return indicadores

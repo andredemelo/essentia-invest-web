@@ -35,6 +35,8 @@ def cria_tabelas():
             nome_ativo TEXT NOT NULL,
             nota_ativo REAL NOT NULL,
             preco_atual REAL NOT NULL,
+            lpa REAL NOT NULL,
+            vpa REAL NOT NULL,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
     ''')
