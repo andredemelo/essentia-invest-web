@@ -65,10 +65,10 @@ def consulta_dividendos():
         valor_total_liquido = dividendo[9]
         data_pagamento = dividendo[11]
         data_atual = datetime.now()
-
-        # Converte a data de pagamento para o formato datetime
-        data_pagamento_formatada = datetime.strptime(data_pagamento, "%d-%m-%Y")
         
+        # Converte a data de pagamento para o formato datetime
+        data_pagamento_formatada = datetime.strptime(data_pagamento, "%d/%m/%Y")
+
         if codigo_ativo not in dividendos_por_codigo:
             dividendos_por_codigo[codigo_ativo] = []
             total_dividendos_por_codigo[codigo_ativo] = 0
@@ -76,6 +76,11 @@ def consulta_dividendos():
             total_dividendos_provisionado_por_codigo[codigo_ativo] = 0
         
         dividendos_por_codigo[codigo_ativo].append(dividendo)
+        
+        if isinstance(valor_total_liquido, str):
+            valor_total_liquido = valor_total_liquido.replace(',', '.')
+
+        valor_total_liquido  = float(valor_total_liquido)
         total_dividendos_por_codigo[codigo_ativo] += round(valor_total_liquido, 2)
         
         # Comparar diretamente os objetos datetime

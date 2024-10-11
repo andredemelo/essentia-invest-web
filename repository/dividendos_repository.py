@@ -5,7 +5,7 @@ def consulta_dividendos(user_id, row):
     cursor.execute('''
             SELECT * FROM dividendo 
             WHERE user_id = ? AND data_com = ? AND data_pagamento = ? AND categoria = ? AND codigo_ativo = ? AND tipo = ? AND corretora = ?
-        ''', (user_id, row['Data com'], row['Pagamento'], row['CATEGORIA'], row['Ativo'], row['Tipo'], row['Corretora/banco']))
+        ''', (user_id, row['Data com'], row['Pagamento'], row['Categoria'], row['Ativo'], row['Tipo'], row['Corretora/banco']))
     dividendo = cursor.fetchall()
     conn.close()
     return dividendo
@@ -17,7 +17,7 @@ def incluir_dividendo(user_id, row):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 user_id,
-                row['CATEGORIA'],
+                row['Categoria'],
                 row['Ativo'],
                 row['Corretora/banco'],
                 row['Tipo'],
