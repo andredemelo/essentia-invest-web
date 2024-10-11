@@ -158,7 +158,11 @@ def calcular_preco_justo_bazin(user_id, ticker, classe):
     valor_dividendo_anual = 0.0
     for dividendo in dividendos:
         valor_dividendo = dividendo[0]
-        valor_dividendo_anual += valor_dividendo
+
+        if isinstance(valor_dividendo, str):
+            valor_dividendo = valor_dividendo.replace(',', '.')
+
+        valor_dividendo_anual += float(valor_dividendo)
     
     dividend_yield_desejado = carteira_ideal_repository.consulta_dividendo_desejado_carteira_ideal(user_id, classe)[0]
 
