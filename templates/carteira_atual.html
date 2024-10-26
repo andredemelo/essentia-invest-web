@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Carteira</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Carteira Atual</h2>
+        <h3>Classe na Carteira</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Classe de Ativo</th>
+                    <th>Valor Total Investido</th>
+                    <th>Valor Total Atual</th>
+                    <th>Diferença</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classe, dados in consolidado_classe.items() %}
+                <tr>
+                    <td>{{ classe.replace('_', ' ').title() }}</td>
+                    <td>R$ {{ dados.total_investido }}</td>
+                    <td>R$ {{ dados.total_valor }}</td>
+                    <td class="font-weight-bold {% if dados.total_diferenca < 0 %}text-danger{% elif dados.total_diferenca > 0 %}text-success{% endif %}">
+                        R$ {{ dados.total_diferenca }}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>R$ {{ soma_total_valor }}</strong></td>
+                    <td><strong>R$ {{ soma_total_valor_investido }}</strong></td>
+                    <td class="font-weight-bold {% if soma_total_valor_diferenca < 0 %}text-danger{% elif soma_total_valor_diferenca > 0 %}text-success{% endif %}">
+                        <strong>R$ {{ soma_total_valor_diferenca }}</strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="mt-5">Ativos na Carteira</h3>
+        <ul class="nav nav-tabs" id="tabAtivos" role="tablist">
+            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
+                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if loop.first %}active{% endif %}" id="ativo-{{ classe }}-tab" data-toggle="tab" href="#ativo-{{ classe }}" role="tab" aria-controls="ativo-{{ classe }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                            {{ classe.replace('_', ' ').title() }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <div class="tab-content" id="tabAtivosContent">
+            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
+                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
+                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="ativo-{{ classe }}" role="tabpanel" aria-labelledby="ativo-{{ classe }}-tab">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ativo</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço Médio</th>
+                                    <th>Preço Atual</th>
+                                    <th>Rentabilidade</th>
+                                    <th>Total Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ativo in dados_ativos if ativo.classe == classe %}
+                                <tr>
+                                    <td>{{ ativo.ticker }}</td>
+                                    <td>{{ ativo.quantidade }}</td>
+                                    <td>R$ {{ ativo.preco_medio }}</td>
+                                    <td>R$ {{ ativo.preco_atual }}</td>
+                                    <td class="font-weight-bold {% if ativo.valor_diferenca < 0 %}text-danger{% elif ativo.valor_diferenca > 0 %}text-success{% endif %}">
+                                        R$ {{ ativo.valor_diferenca }}
+                                    </td>
+                                    <td>R$ {{ ativo.total_atual }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <h3 class="mt-5">Preço Justo</h3>
+        <ul class="nav nav-tabs" id="tabPrecoJusto" role="tablist">
+            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
+                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if loop.first %}active{% endif %}" id="precoJusto-{{ classe }}-tab" data-toggle="tab" href="#precoJusto-{{ classe }}" role="tab" aria-controls="precoJusto-{{ classe }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                            {{ classe.replace('_', ' ').title() }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <div class="tab-content" id="tabPrecoJustoContent">
+            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
+                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
+                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="precoJusto-{{ classe }}" role="tabpanel" aria-labelledby="precoJusto-{{ classe }}-tab">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ativo</th>
+                                    <th>Preço Atual</th>
+                                    <th>Preço Justo Bazin</th>
+                                    <th>Preço Justo Graham</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ativo in dados_ativos if ativo.classe == classe %}
+                                <tr>
+                                    <td>{{ ativo.ticker }}</td>
+                                    <td>R$ {{ ativo.preco_atual }}</td>
+                                    <td>R$ {{ ativo.preco_justo_bazin }}</td>
+                                    <td>R$ {{ ativo.preco_justo_graham }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

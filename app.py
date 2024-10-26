@@ -6,6 +6,7 @@ import service.db_service as db_service
 import service.atualiza_preco_ativos_service as atualiza_preco_ativos_service
 import service.autenticacao_service as autenticacao_service
 import service.carteira_ideal_service as carteira_ideal_service
+import service.carteira_atual_service as carteira_atual_service
 import service.balanceamento_carteira_service as balanceamento_carteira_service
 import service.transacao_service as transacao_service
 import service.dividendos_service as dividendos_service
@@ -49,6 +50,11 @@ def dashboard():
 @autenticacao_service.login_required
 def carteira_ideal():
     return carteira_ideal_service.consulta_carteira_ideal(session, request)
+
+@app.route('/carteira-atual', methods=['GET', 'POST'])
+@autenticacao_service.login_required
+def carteira_atual():
+    return carteira_atual_service.consulta_carteira_atual(session)
 
 @app.route('/editar_alocacao', methods=['POST'])
 @autenticacao_service.login_required
