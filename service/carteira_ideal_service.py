@@ -76,9 +76,8 @@ def cadastrar_ativos(classe_ativo, session, request):
     if request.method == 'POST':
         nome_ativo = request.form['nome_ativo']
         nota_ativo = request.form['nota_ativo']
-        dividendo_desejado = request.form['dividendo_desejado']
         
-        carteira_ideal_repository.inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado)
+        carteira_ideal_repository.inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo)
         
         flash('Ativo cadastrado com sucesso!', 'success')
         return redirect(url_for('cadastrar_ativos', classe_ativo=classe_ativo))

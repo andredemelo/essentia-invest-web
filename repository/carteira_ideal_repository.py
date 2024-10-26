@@ -46,9 +46,9 @@ def excluir_porcentagem_classe_ativo(user_id, classe_ativo):
     conn.commit()
     conn.close()
 
-def inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado):
+def inclui_ativo(user_id, classe_ativo, nome_ativo, nota_ativo):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('INSERT INTO ativos_carteira_ideal (user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado)  VALUES (?, ?, ?, ?, ?)', (user_id, classe_ativo, nome_ativo, nota_ativo, dividendo_desejado))
+    cursor.execute('INSERT INTO ativos_carteira_ideal (user_id, classe_ativo, nome_ativo, nota_ativo)  VALUES (?, ?, ?, ?)', (user_id, classe_ativo, nome_ativo, nota_ativo))
     conn.commit()
     conn.close()
 

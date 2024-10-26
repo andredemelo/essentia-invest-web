@@ -38,7 +38,7 @@ def consulta_balanceamento_carteira(session):
                 else:
                     quantidade = calcula_quantidade_ativo(user_id, ticker)
                     preco_medio = calcula_preco_medio(user_id, ticker)
-            else:
+            elif ativo[0] == 'renda_fixa':
                 if ativo[1] == 'SUL AMERICA EXCLUSIVE FI RF REF DI' :
                     quantidade = 198.23
                     preco_medio = 98.52
@@ -48,6 +48,8 @@ def consulta_balanceamento_carteira(session):
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
                     quantidade = 648.42
                     preco_medio = 1.36
+            else:
+                preco_medio = 0
             
             nota = ativo[2]
             preco_atual = ativo[3]
@@ -149,6 +151,9 @@ def calcula_preco_medio(user_id, ticker):
             quantidade_total = quantidade_total - quantidade
             valor_total_compra = valor_total_compra - (preco * quantidade)
     
+    if quantidade_total == 0:
+        return 0.0
+
     return round(valor_total_compra / quantidade_total, 2)
 
 def calcular_preco_justo_bazin(user_id, ticker, classe):
