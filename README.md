@@ -1,8 +1,9 @@
-# essentia-invest-web
+# Essentia Invest
 Essentia Invest é uma aplicação web com o objetivo de ajudar o investidor a se concentrar na essência dos seus investimentos.
 
-# slogan
-Gerencie seus investimentos com base em fundamentos. A essência do sucesso financeiro.
+# Slogan
+Gerencie seus investimentos com base em fundamentos.
+A essência do sucesso financeiro.
 
 # Funcionalidades
 - Carteira Ideal: Gestão da porcentagem desejada de alocação de cada classe e com base na classe, possibilitar a gestão dos ativos, dando uma nota e cadastro de perguntas por classe para a avaliação dos ativos.
