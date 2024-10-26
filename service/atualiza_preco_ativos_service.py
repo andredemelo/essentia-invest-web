@@ -15,9 +15,9 @@ def atualiza_preco_atual():
         if classe != 'renda_fixa':
             preco_atual = round(yahoo_finance.obtem_preco_atual(ticker, classe), 2)
         elif classe == 'renda_fixa' and ticker == 'SUL AMERICA EXCLUSIVE FI RF REF DI':
-            preco_atual = 112.62
+            preco_atual = 113.07
         elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
-            preco_atual = 1.27
+            preco_atual = 1.28
         elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
             preco_atual = 1.45
         if classe == 'etf_eua': 
