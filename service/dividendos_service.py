@@ -40,11 +40,8 @@ def import_dividendos(filepath, user_id):
     else:
         df = pd.read_excel(filepath)
 
-    # Convertendo colunas de datas para string
-    df['Data com'] = pd.to_datetime(df['Data com']).dt.strftime('%d-%m-%Y')
-    df['Pagamento'] = pd.to_datetime(df['Pagamento']).dt.strftime('%d-%m-%Y')
-
-    for index, row in df.iterrows():
+    for index in range(len(df)):
+        row = df.iloc[index]
         consulta_dividendo = dividendos_repository.consulta_dividendos(user_id, row)
 
         if consulta_dividendo is None or len(consulta_dividendo) == 0:

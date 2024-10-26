@@ -13,9 +13,9 @@ def consulta_transacoes(user_id, row):
                    SELECT * FROM transacao 
                    WHERE user_id = ? AND data_operacao = ? AND categoria = ? AND codigo_ativo = ? AND operacao = ? AND quantidade =? AND preco_unitario = ? AND corretora = ?
                     ''', (user_id, row['Data operação'], row['Categoria'], row['Código Ativo'], row['Operação C/V/B'], row['Quantidade'], row['Preço unitário'], row['Corretora']))
-    existe_transacao = cursor.fetchone()
+    transacao = cursor.fetchone()
     conn.close()
-    return existe_transacao
+    return transacao
 
 def inserir_transacao(user_id, row):
     conn, cursor = db_repository.inicializa_conexao_db()

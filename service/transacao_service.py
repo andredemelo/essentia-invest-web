@@ -41,7 +41,7 @@ def import_transacoes(filepath, user_id):
     else:
         df = pd.read_excel(filepath)
 
-    for _, row in df.iterrows():
+    for row in df.iterrows():
         existe_transacao = transacao_repository.consulta_transacoes(user_id, row)
 
         if not existe_transacao:

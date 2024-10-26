@@ -6,7 +6,7 @@ def consulta_dividendos(user_id, row):
             SELECT * FROM dividendo 
             WHERE user_id = ? AND data_com = ? AND data_pagamento = ? AND categoria = ? AND codigo_ativo = ? AND tipo = ? AND corretora = ?
         ''', (user_id, row['Data com'], row['Pagamento'], row['Categoria'], row['Ativo'], row['Tipo'], row['Corretora/banco']))
-    dividendo = cursor.fetchall()
+    dividendo = cursor.fetchone()
     conn.close()
     return dividendo
 
