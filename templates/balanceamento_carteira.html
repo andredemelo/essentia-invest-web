@@ -9,14 +9,11 @@
 <body>
     <div class="container mt-5">
         <h2 class="text-center">Balanceamento de Carteira</h2>
-        <!-- Tabela de Patrimônio Total -->
-        <h3>Patrimônio Total</h3>
+        <h3>Carteira Atual / Carteira Ideal - Classe</h3>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Classe de Ativo</th>
-                    <th>Valor Total Consolidado</th>
-                    <th>Soma das Notas</th>
                     <th>% Atual</th>
                     <th>% Ideal</th>
                     <th>Diferença</th>
@@ -27,8 +24,6 @@
                 {% for classe, dados in consolidado_classe.items() %}
                 <tr>
                     <td>{{ classe.replace('_', ' ').title() }}</td>
-                    <td>R$ {{ dados.total_valor }}</td>
-                    <td>{{ dados.total_notas }}</td>
                     <td>{{ dados.porcentagem_atual }} %</td>
                     <td>{{ dados.porcentagem_ideal }} %</td>
                     <td class="font-weight-bold {% if dados.diferenca_aporte < 0 %}text-danger{% elif dados.diferenca_aporte > 0 %}text-success{% endif %}">
@@ -37,19 +32,10 @@
                     <td>{{ dados.necessidade_aporte }}</td>
                 </tr>
                 {% endfor %}
-                <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong>{{ soma_total_valor }}</strong></td>
-                    <td><strong>{{ soma_total_notas }}</strong></td>
-                    <td><strong>{{ soma_porcentagem_atual }}</strong></td>
-                    <td><strong>{{ soma_porcentagem_ideal }}</strong></td>
-                    <td> - </td>
-                    <td> - </td>
-                </tr>
             </tbody>
         </table>
 
-        <h3 class="mt-5">Ativos na Carteira</h3>
+        <h3 class="mt-5">Carteira Atual / Carteira Ideal - Ativos</h3>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
                 {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
@@ -69,14 +55,6 @@
                             <thead>
                                 <tr>
                                     <th>Ativo</th>
-                                    <th>Quantidade</th>
-                                    <th>Nota</th>
-                                    <th>Preço Médio</th>
-                                    <th>Preço Atual</th>
-                                    <th>Preço Justo Bazin</th>
-                                    <th>Preço Justo Graham</th>
-                                    <th>Rentabilidade</th>
-                                    <th>Total Atual</th>
                                     <th>% Ideal</th>
                                     <th>% Atual</th>
                                     <th>Diferença</th>
@@ -87,16 +65,6 @@
                                 {% for ativo in dados_ativos if ativo.classe == classe %}
                                 <tr>
                                     <td>{{ ativo.ticker }}</td>
-                                    <td>{{ ativo.quantidade }}</td>
-                                    <td>{{ ativo.nota }}</td>
-                                    <td>R$ {{ ativo.preco_medio }}</td>
-                                    <td>R$ {{ ativo.preco_atual }}</td>
-                                    <td>R$ {{ ativo.preco_justo_bazin }}</td>
-                                    <td>R$ {{ ativo.preco_justo_graham }}</td>
-                                    <td class="font-weight-bold {% if ativo.valor_diferenca < 0 %}text-danger{% elif ativo.valor_diferenca > 0 %}text-success{% endif %}">
-                                        R$ {{ ativo.valor_diferenca }}
-                                    </td>
-                                    <td>R$ {{ ativo.total_atual }}</td>
                                     <td>{{ ativo.porcentagem_ideal }} %</td>
                                     <td>{{ ativo.porcentagem_atual }} %</td>
                                     <td class="font-weight-bold {% if ativo.diferenca_aporte < 0 %}text-danger{% elif ativo.diferenca_aporte > 0 %}text-success{% endif %}">

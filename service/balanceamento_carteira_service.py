@@ -57,18 +57,11 @@ def consulta_balanceamento_carteira(session):
             total_atual = preco_atual * quantidade if preco_atual else 0
             total_valor_classe += total_atual
             valor_diferenca = (preco_atual * quantidade) - (preco_medio * quantidade)
-            preco_justo_bazin = calcular_preco_justo_bazin(user_id, ticker, classe)
-            preco_justo_graham = calcula_preco_justo_benjamin_graham(user_id, ticker, classe)
             
             dados_ativos.append({
                 'classe': classe,
                 'ticker': ticker,
-                'quantidade': quantidade,
-                'preco_medio': round(preco_medio, 2),
                 'nota': nota,
-                'preco_atual': round(preco_atual, 2),
-                'preco_justo_bazin': round(preco_justo_bazin, 2),
-                'preco_justo_graham': round(preco_justo_graham, 2),
                 'valor_diferenca': round(valor_diferenca, 2),
                 'total_atual': round(total_atual, 2),
                 'porcentagem_ideal': 0
@@ -80,8 +73,6 @@ def consulta_balanceamento_carteira(session):
         }
     
     # Calcular porcentagem ideal para cada classe de ativo e necessidade de aporte/espera
-    soma_porcentagem_atual = 0
-    soma_porcentagem_ideal = 0
     for classe, dados in consolidado_classe.items():
         porcentagem_ideal = carteira_ideal_repository.consulta_porcentagem(user_id, classe)
         porcentagem_ideal = porcentagem_ideal[0] if porcentagem_ideal else 0
@@ -94,11 +85,8 @@ def consulta_balanceamento_carteira(session):
             'necessidade_aporte': necessidade_aporte,
             'diferenca_aporte': diferenca_porcentagem
         })
-        soma_porcentagem_atual += porcentagem_atual
-        soma_porcentagem_ideal += porcentagem_ideal
 
-    # Calcular somas
-    soma_total_valor = round(sum(dados['total_valor'] for dados in consolidado_classe.values()), 2)
+    # Calcular soma
     soma_total_notas = round(sum(dados['total_notas'] for dados in consolidado_classe.values()), 2)
 
     for ativo in dados_ativos:
@@ -121,9 +109,7 @@ def consulta_balanceamento_carteira(session):
         diferenca_aporte = porcentagem_ideal_atualizado - porcentagem_atual
         ativo['diferenca_aporte'] = round(diferenca_aporte, 2)
 
-    return render_template('balanceamento_carteira.html', dados_ativos=dados_ativos, consolidado_classe=consolidado_classe, total_patrimonio=total_patrimonio,
-                           soma_total_valor=soma_total_valor, soma_total_notas=soma_total_notas,
-                           soma_porcentagem_atual=round(soma_porcentagem_atual, 2), soma_porcentagem_ideal=soma_porcentagem_ideal)
+    return render_template('balanceamento_carteira.html', dados_ativos=dados_ativos, consolidado_classe=consolidado_classe)
 
 def calcula_quantidade_ativo(user_id, ticker):
     transacoes = transacao_repository.consulta_transacoes_ativo(user_id, ticker)
@@ -155,34 +141,3 @@ def calcula_preco_medio(user_id, ticker):
         return 0.0
 
     return round(valor_total_compra / quantidade_total, 2)
-
-def calcular_preco_justo_bazin(user_id, ticker, classe):
-    ano_consulta_dividendo = str(datetime.now().year - 1)
-    dividendos = dividendos_repository.consulta_dividendos_do_ano(ticker, ano_consulta_dividendo)
-
-    valor_dividendo_anual = 0.0
-    for dividendo in dividendos:
-        valor_dividendo = dividendo[0]
-
-        if isinstance(valor_dividendo, str):
-            valor_dividendo = valor_dividendo.replace(',', '.')
-
-        valor_dividendo_anual += float(valor_dividendo)
-    
-    dividend_yield_desejado = carteira_ideal_repository.consulta_dividendo_desejado_carteira_ideal(user_id, classe)[0]
-
-    if dividend_yield_desejado == 0:
-        return 0
-    
-    return valor_dividendo_anual / (dividend_yield_desejado / 100)
-
-def calcula_preco_justo_benjamin_graham(user_id, ticker, classe):
-    indicadores = carteira_ideal_repository.consulta_indicadores_ativo(user_id, classe, ticker)
-
-    lpa = 0
-    vpa = 0
-    for indicador in indicadores:
-        lpa = indicador[0]
-        vpa = indicador[1]
-
-    return math.sqrt(22.5 * lpa * vpa)
