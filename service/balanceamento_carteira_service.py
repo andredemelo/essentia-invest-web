@@ -40,14 +40,14 @@ def consulta_balanceamento_carteira(session):
                     preco_medio = calcula_preco_medio(user_id, ticker)
             else:
                 if ativo[1] == 'SUL AMERICA EXCLUSIVE FI RF REF DI' :
-                    quantidade = 231.89
+                    quantidade = 198.23
                     preco_medio = 98.52
                 elif ativo[1] == 'TREND DI FIC FI RF SIMPLES':
-                    quantidade = 7499.14
+                    quantidade = 8770.28
                     preco_medio = 1.24
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
-                    quantidade = 555.75
-                    preco_medio = 1.35
+                    quantidade = 648.42
+                    preco_medio = 1.36
             
             nota = ativo[2]
             preco_atual = ativo[3]
