@@ -4,7 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import service.db_service as db_service
 import service.atualiza_preco_ativos_service as atualiza_preco_ativos_service
-import service.autenticaccao_service as autenticacao_service
+import service.autenticacao_service as autenticacao_service
 import service.carteira_ideal_service as carteira_ideal_service
 import service.balanceamento_carteira_service as balanceamento_carteira_service
 import service.transacao_service as transacao_service
