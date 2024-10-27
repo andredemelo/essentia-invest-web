@@ -3,6 +3,8 @@ from datetime import datetime
 
 import math
 
+import util.conversor as conversor
+
 import repository.carteira_ideal_repository as carteira_ideal_repository
 import repository.transacao_repository as transacao_repository
 import repository.dividendos_repository as dividendos_repository
@@ -50,8 +52,6 @@ def consulta_carteira_atual(session):
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
                     quantidade = 648.42
                     preco_medio = 1.36
-            else:
-                preco_medio = 0
             
             nota = ativo[2]
             preco_atual = ativo[3]
@@ -80,9 +80,14 @@ def consulta_carteira_atual(session):
                 'porcentagem_ideal': 0
             })
         total_patrimonio += total_valor_classe
+
+        if ativo[0] == 'etf_eua' or ativo[0] == 'stocks':
+            total_investido_valor_classe = conversor.dolar_para_real(total_investido_valor_classe)
+            total_diferenca_valor_classe = total_valor_classe - total_investido_valor_classe
+
         consolidado_classe[classe] = {
             'total_valor': round(total_valor_classe, 2),
-            'total_investido': round(total_investido_valor_classe, 4),
+            'total_investido': round(total_investido_valor_classe, 2),
             'total_diferenca': round(total_diferenca_valor_classe, 2),
             'total_notas': total_notas
         }
