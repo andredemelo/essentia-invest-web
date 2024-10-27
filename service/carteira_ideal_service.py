@@ -82,9 +82,18 @@ def cadastrar_ativos(classe_ativo, session, request):
         flash('Ativo cadastrado com sucesso!', 'success')
         return redirect(url_for('cadastrar_ativos', classe_ativo=classe_ativo))
     
-    ativos = carteira_ideal_repository.listar_ativos(user_id, classe_ativo)
-    soma_notas = sum(float(ativo[1]) for ativo in ativos)
-    
+    ativos_consulta = carteira_ideal_repository.listar_ativos(user_id, classe_ativo)
+    porcentagem_total = carteira_ideal_repository.consulta_soma_porcentagem(user_id)
+    soma_notas = sum(float(ativo[1]) for ativo in ativos_consulta)
+
+    ativos = []
+    for ativo in ativos_consulta:
+        nome_ativo = ativo[0]
+        nota_ativo = float(ativo[1])
+        porcentagem_classe = round((nota_ativo / soma_notas) * 100 if soma_notas > 0 else 0, 2)
+        porcentagem_geral = round((nota_ativo / porcentagem_total) * 100 if porcentagem_total > 0 else 0, 2)
+        ativos.append((nome_ativo, nota_ativo, porcentagem_classe, porcentagem_geral))
+
     return render_template('cadastrar_ativos.html', classe_ativo=classe_ativo, ativos=ativos, soma_notas=soma_notas)
 
 def editar_ativo(session, request):

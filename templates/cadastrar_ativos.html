@@ -25,6 +25,8 @@
                 <tr>
                     <th>Nome do Ativo</th>
                     <th>Nota do Ativo</th>
+                    <th>Porcentagem Ideal Classe</th>
+                    <th>Porcentagem Ideal Carteira</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -33,6 +35,8 @@
                     <tr>
                         <td>{{ ativo[0] }}</td>
                         <td>{{ ativo[1] }}</td>
+                        <td>{{ ativo[2] }}</td>
+                        <td>{{ ativo[3] }}</td>
                         <td>
                             <!-- Botão para abrir o modal de edição -->
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal{{ loop.index }}">
@@ -104,6 +108,8 @@
                 <tr>
                     <td><strong>Soma das Notas: </strong></td>
                     <td>{{ soma_notas }}</td>
+                    <td> - </td>
+                    <td> - </td>
                     <td> - </td>
                 </tr>
             </tbody>
