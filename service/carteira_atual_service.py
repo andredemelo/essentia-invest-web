@@ -44,14 +44,14 @@ def consulta_carteira_atual(session):
                     preco_medio = calcula_preco_medio(user_id, ticker)
             elif ativo[0] == 'renda_fixa':
                 if ativo[1] == 'SUL AMERICA EXCLUSIVE FI RF REF DI' :
-                    quantidade = 198.23
+                    quantidade = 185.00
                     preco_medio = 98.52
                 elif ativo[1] == 'TREND DI FIC FI RF SIMPLES':
                     quantidade = 8770.28
                     preco_medio = 1.24
                 elif ativo[1] == 'TREND INB FIC FI RF SIMPLES':
-                    quantidade = 648.42
-                    preco_medio = 1.36
+                    quantidade = 698.85
+                    preco_medio = 1.37
             
             nota = ativo[2]
             preco_atual = ativo[3]
