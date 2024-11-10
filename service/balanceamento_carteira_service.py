@@ -2,6 +2,8 @@ from flask import render_template
 from datetime import datetime
 import math
 
+import util.conversor as conversor
+
 import repository.carteira_ideal_repository as carteira_ideal_repository
 import repository.transacao_repository as transacao_repository
 import repository.dividendos_repository as dividendos_repository
@@ -76,11 +78,16 @@ def obter_dados_ativo(user_id, ativo):
             return 950.0, 8.73, 7.28
         elif ticker == 'VINO11':
             return 1747.0, 9.26, preco_atual
+        elif classe == 'etf_eua': 
+            return calcula_quantidade_ativo(user_id, ticker), round(conversor.dolar_para_real(calcula_preco_medio(user_id, ticker))), round(conversor.dolar_para_real(preco_atual), 2)
         else:
             return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
-    else:
-        # Para renda fixa, retornar preço_atual como 0 ou o valor apropriado
-        return 0, 0, preco_atual
+    elif classe == 'renda_fixa' and ticker == 'SUL AMERICA EXCLUSIVE FI RF REF DI':
+        return 185.00, 98.52, 113.02
+    elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
+        return 8770.28, 1.24, 1.28
+    elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
+        return 698.85, 1.37, 1.45
 
 def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio):
     for classe, dados in consolidado_classe.items():
