@@ -114,7 +114,9 @@ def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atua
     if classe == 'renda_fixa':
         return precos_renda_fixa(ticker, preco_atual)
     elif classe == 'fiis' and ticker == 'BCFF11':
-        return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), 7.28
+        return calcula_quantidade_ativo(user_id, ticker), 8.73, 7.28
+    elif classe == 'fiis' and ticker == 'VINO11':
+        return calcula_quantidade_ativo(user_id, ticker), 9.26, preco_atual
     return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
 
 def precos_renda_fixa(ticker, preco_atual):
