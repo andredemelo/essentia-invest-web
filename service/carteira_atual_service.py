@@ -110,7 +110,6 @@ def consulta_carteira_atual(session):
                            soma_total_valor_diferenca=soma_total_valor_diferenca)
 
 def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atual):
-    # Função para calcular quantidade e preço médio com base no ticker e classe
     if classe == 'renda_fixa':
         return precos_renda_fixa(ticker, preco_atual)
     elif classe == 'fiis' and ticker == 'BCFF11':
@@ -120,10 +119,9 @@ def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atua
     return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
 
 def precos_renda_fixa(ticker, preco_atual):
-    # Valores específicos para renda fixa
     precos = {
-        'SUL AMERICA EXCLUSIVE FI RF REF DI': (185.00, 98.52, preco_atual),  # Adiciona o preço atual
-        'TREND DI FIC FI RF SIMPLES': (8770.28, 1.24, preco_atual),
+        'SUL AMERICA EXCLUSIVE FI RF REF DI': (185.00, 98.52, preco_atual),
+        'TREND DI FIC FI RF SIMPLES': (10129.60, 1.25, preco_atual),
         'TREND INB FIC FI RF SIMPLES': (698.85, 1.37, preco_atual)
     }
     return precos.get(ticker, (0, 0, preco_atual))

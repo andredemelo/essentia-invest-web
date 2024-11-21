@@ -85,7 +85,7 @@ def obter_dados_ativo(user_id, ativo):
     elif classe == 'renda_fixa' and ticker == 'SUL AMERICA EXCLUSIVE FI RF REF DI':
         return 185.00, 98.52, 113.02
     elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
-        return 8770.28, 1.24, 1.28
+        return 10129.60, 1.25, 1.28
     elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
         return 698.85, 1.37, 1.45
 
