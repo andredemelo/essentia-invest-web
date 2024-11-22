@@ -79,15 +79,15 @@ def obter_dados_ativo(user_id, ativo):
         elif ticker == 'VINO11':
             return 1747.0, 9.26, preco_atual
         elif classe == 'etf_eua': 
-            return calcula_quantidade_ativo(user_id, ticker), round(conversor.dolar_para_real(calcula_preco_medio(user_id, ticker))), round(conversor.dolar_para_real(preco_atual), 2)
+            return calcula_quantidade_ativo(user_id, ticker), round(calcula_preco_medio(user_id, ticker)), round(preco_atual, 2)
         else:
             return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
     elif classe == 'renda_fixa' and ticker == 'SUL AMERICA EXCLUSIVE FI RF REF DI':
-        return 185.00, 98.52, 113.02
+        return 185.00, 98.52, 113.90
     elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
-        return 10129.60, 1.25, 1.28
+        return 10129.60, 1.25, 1.29
     elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
-        return 698.85, 1.37, 1.45
+        return 698.85, 1.37, 1.46
 
 def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio):
     for classe, dados in consolidado_classe.items():
@@ -96,7 +96,7 @@ def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio)
         porcentagem_atual = (dados['total_valor'] / total_patrimonio) * 100 if total_patrimonio != 0 else 0
         necessidade_aporte = 'Aportar' if porcentagem_atual < porcentagem_ideal else 'Esperar'
         diferenca_porcentagem = round(porcentagem_ideal - porcentagem_atual, 2)
-        
+
         dados.update({
             'porcentagem_atual': round(porcentagem_atual, 2),
             'porcentagem_ideal': porcentagem_ideal,

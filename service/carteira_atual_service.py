@@ -53,10 +53,6 @@ def consulta_carteira_atual(session):
                 'total_investido': round(total_investido, 2),
                 'porcentagem_ideal': 0
             })
-
-        # Ajustar valores de ativos em dólares para reais
-        if classe in {'etf_eua', 'stocks'}:
-            total_investido_valor_classe = conversor.dolar_para_real(total_investido_valor_classe)
         
         consolidado_classe[classe] = {
             'total_valor': round(total_valor_classe, 2),
@@ -116,7 +112,7 @@ def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atua
         return calcula_quantidade_ativo(user_id, ticker), 8.73, 7.28
     elif classe == 'fiis' and ticker == 'VINO11':
         return calcula_quantidade_ativo(user_id, ticker), 9.26, preco_atual
-    return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
+    return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker, classe), preco_atual
 
 def precos_renda_fixa(ticker, preco_atual):
     precos = {
@@ -131,7 +127,7 @@ def calcula_quantidade_ativo(user_id, ticker):
     quantidade_total = sum(float(t[1].replace(',', '.')) * (1 if t[0] in {'C', 'B'} else -1) for t in transacoes)
     return round(quantidade_total, 2)
 
-def calcula_preco_medio(user_id, ticker):
+def calcula_preco_medio(user_id, ticker, classe):
     transacoes = transacao_repo.consulta_transacoes_ativo(user_id, ticker)
     valor_total, quantidade_total = 0, 0
     for operacao, quantidade, preco in transacoes:
@@ -143,6 +139,8 @@ def calcula_preco_medio(user_id, ticker):
         elif operacao == 'V':
             quantidade_total -= quantidade
             valor_total -= preco * quantidade
+    if classe == 'etf_eua':
+        valor_total = conversor.dolar_para_real(valor_total)
     return round(valor_total / quantidade_total, 2) if quantidade_total else 0.0
 
 def calcular_preco_justo_bazin(user_id, ticker, classe):
