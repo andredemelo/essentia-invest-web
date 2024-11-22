@@ -4,17 +4,15 @@ import yfinance as yf
 def ajustar_ticker(ticker, classe):
     if classe in ['acao', 'fiis']:
         return ticker + '.SA'
-    if classe == 'etf_eua':
-        return ticker + '.F'
     return ticker
 
 # Função para buscar o preço atual do ativo usando Yahoo Finance
 def obtem_preco_atual(ticker, classe):
     ticker = ajustar_ticker(ticker, classe)
     ativo = yf.Ticker(ticker)
-    hist = ativo.history(period="1d")
+    hist = ativo.history(period="1mo")  
     if not hist.empty:
-        return hist['Close'][-1]
+        return hist['Close'].iloc[-1]
     return 0
 
 # Função para buscar o Dividend Yield do ativo usando Yahoo Finance
@@ -22,7 +20,7 @@ def obtem_dividend_yield(ticker, classe):
     ticker = ajustar_ticker(ticker, classe)
     ativo = yf.Ticker(ticker)
     try:
-        return ativo.info['dividendYield'] * 100
+        return ativo.info.get('dividendYield', 0) * 100
     except KeyError:
         return 0
 
@@ -31,7 +29,7 @@ def obtem_lpa(ticker, classe):
     ticker = ajustar_ticker(ticker, classe)
     ativo = yf.Ticker(ticker)
     try:
-        return ativo.info['trailingEps']
+        return ativo.info.get('trailingEps', 0)
     except KeyError:
         return 0
 
@@ -40,6 +38,6 @@ def obtem_vpa(ticker, classe):
     ticker = ajustar_ticker(ticker, classe)
     ativo = yf.Ticker(ticker)
     try:
-        return ativo.info['bookValue']
+        return ativo.info.get('bookValue', 0)
     except KeyError:
         return 0
