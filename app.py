@@ -25,6 +25,9 @@ def init_db():
 def scheduler_atualiza_preco_atual():
     atualiza_preco_ativos_service.atualiza_preco_atual()
 
+def scheduler_atualiza_historico_preco():
+    atualiza_preco_ativos_service.atualiza_historico_preco()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -135,6 +138,7 @@ if __name__ == '__main__':
     
     scheduler = BackgroundScheduler()
     scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=8, minute=30)
+    scheduler.add_job(scheduler_atualiza_historico_preco, 'cron', hour=8, minute=30)
     scheduler.start()
 
     app.run(debug=True)

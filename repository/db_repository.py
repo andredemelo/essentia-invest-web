@@ -41,6 +41,15 @@ def cria_tabelas():
         )
     ''')
     cursor.execute('''
+        CREATE TABLE IF NOT EXISTS historico_preco_ativo_carteira_ideal (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            classe_ativo TEXT NOT NULL,
+            nome_ativo TEXT NOT NULL,
+            data TEXT NOT NULL,
+            preco REAL NOT NULL
+        )
+    ''')
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS transacao (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,

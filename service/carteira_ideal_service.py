@@ -11,7 +11,6 @@ def consulta_carteira_ideal(session, request):
         classe_ativo = request.form.get('classe_ativo')
         porcentagem = float(request.form.get('porcentagem', 0))
         dividendo_desejado = request.form.get('dividendo_desejado')
-        print(f'Porcentagem: {porcentagem}')
 
         soma_atual, nova_soma = calcula_nova_soma(user_id, classe_ativo, porcentagem)
         

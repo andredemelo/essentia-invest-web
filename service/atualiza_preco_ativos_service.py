@@ -1,6 +1,10 @@
 import repository.carteira_ideal_repository as carteira_ideal_repository
+import repository.historico_carteira_ideal_repository as historico_carteira_ideal_repository
+
 import util.yahoo_finance as yahoo_finance
 import util.conversor as conversor
+
+from datetime import datetime, timedelta
 
 RENDA_FIXA_PRECOS_ESPECIAIS = {
     'SUL AMERICA EXCLUSIVE FI RF REF DI': 113.55,
@@ -39,4 +43,36 @@ def atualiza_preco_atual():
         
         carteira_ideal_repository.atualiza_dados__ativo(classe, ticker, preco_atual, lpa, vpa)
     
+    print('Atualização concluída!')
+
+def atualiza_historico_preco():
+    print('Iniciando atualização de histórico de preço...')
+    
+    ativos = carteira_ideal_repository.consulta_preco_atual_ativo()
+
+    for ativo in ativos:
+        classe, ticker = ativo[0], ativo[1]
+        print(f'Atualizando preço atual para o ativo: {ticker} ({classe})')
+
+        if classe != 'renda_fixa':
+            data_atual = datetime.now()
+            dia_anterior = data_atual - timedelta(days=1)
+            data_formatada = dia_anterior.strftime("%d/%m/%Y")
+
+            preco_historico = historico_carteira_ideal_repository.consulta_data_preco_historico(classe, ticker, data_formatada)
+
+            if preco_historico is None:
+                dados = yahoo_finance.obter_dados_historicos_ativo(ticker, classe, dia_anterior)
+
+                if isinstance(dados, str):
+                    print(f"Erro ao buscar dados para o ativo {ticker}: {dados}")
+                    continue
+                
+                for _, row in dados.iterrows():
+                    data = row['Date'].strftime("%d-%m-%Y")
+                    preco = round(row['Adj Close'], 2)
+                    historico_carteira_ideal_repository.inclui_historico_preco(classe, ticker, data, preco)
+            else:
+                print('Preço já cadastrado no banco de dados!')
+
     print('Atualização concluída!')

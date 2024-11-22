@@ -1,4 +1,5 @@
 import yfinance as yf
+from datetime import datetime
 
 # Função para ajustar o ticker com base na classe
 def ajustar_ticker(ticker, classe):
@@ -41,3 +42,15 @@ def obtem_vpa(ticker, classe):
         return ativo.info.get('bookValue', 0)
     except KeyError:
         return 0
+
+# Função para buscar o valor histórico dos ativos
+def obter_dados_historicos_ativo(ticker, classe, data_inicial):
+    ticker = ajustar_ticker(ticker, classe)
+    dados = yf.download(ticker, start=data_inicial)
+
+    if not dados.empty:
+        dados = dados[['Adj Close']]
+        dados.reset_index(inplace=True)
+        return dados
+    else:
+        return f"Nenhum dado encontrado para o ativo '{ticker}' desde {data_inicial}."
