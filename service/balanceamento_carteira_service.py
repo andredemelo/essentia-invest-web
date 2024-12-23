@@ -82,12 +82,10 @@ def obter_dados_ativo(user_id, ativo):
             return calcula_quantidade_ativo(user_id, ticker), round(calcula_preco_medio(user_id, ticker)), round(preco_atual, 2)
         else:
             return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
-    elif classe == 'renda_fixa' and ticker == 'SUL AMERICA EXCLUSIVE FI RF REF DI':
-        return 185.00, 98.52, 113.90
     elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
-        return 10129.60, 1.25, 1.29
+        return 34312.11, 1.28, 1.30
     elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
-        return 698.85, 1.37, 1.46
+        return 751.83, 1.38, 1.48
 
 def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio):
     for classe, dados in consolidado_classe.items():

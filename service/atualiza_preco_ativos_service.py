@@ -7,9 +7,8 @@ import util.conversor as conversor
 from datetime import datetime, timedelta
 
 RENDA_FIXA_PRECOS_ESPECIAIS = {
-    'SUL AMERICA EXCLUSIVE FI RF REF DI': 113.90,
-    'TREND DI FIC FI RF SIMPLES': 1.29,
-    'TREND INB FIC FI RF SIMPLES': 1.46
+    'TREND DI FIC FI RF SIMPLES': 1.30,
+    'TREND INB FIC FI RF SIMPLES': 1.48
 }
 
 def obter_preco_atual(ticker, classe):
