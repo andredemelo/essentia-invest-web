@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash, session, request
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from collections import defaultdict
 import os
 import pandas as pd
 
@@ -59,14 +60,16 @@ def consulta_dividendos():
         "provisionado_por_codigo": {}
     }
     
+    mensal_recebidos = defaultdict(float)
+    mensal_provisionados = defaultdict(float)
     data_atual = datetime.now()
     
     for dividendo in dividendos:
-        codigo_ativo, valor_total, data_pagamento = dividendo[3], dividendo[9], dividendo[11]
+        codigo_ativo, valor_total, data_com, data_pagamento = dividendo[3], dividendo[9], dividendo[10], dividendo[11]
         valor_total = float(valor_total.replace(',', '.')) if isinstance(valor_total, str) else float(valor_total)
+        data_com = datetime.strptime(data_com, "%d/%m/%Y")
         data_pagamento = datetime.strptime(data_pagamento, "%d/%m/%Y")
         
-        # Inicializa as estruturas de dados para o código do ativo
         if codigo_ativo not in dividendos_por_codigo:
             dividendos_por_codigo[codigo_ativo] = []
             totais_dividendos["total_por_codigo"][codigo_ativo] = 0
@@ -78,15 +81,29 @@ def consulta_dividendos():
 
         if data_pagamento <= data_atual:
             totais_dividendos["recebido_por_codigo"][codigo_ativo] += valor_total
+            mensal_recebidos[data_pagamento.strftime('%Y-%m')] += valor_total
         else:
             totais_dividendos["provisionado_por_codigo"][codigo_ativo] += valor_total
+            mensal_provisionados[data_pagamento.strftime('%Y-%m')] += valor_total
 
-    # Cálculo dos totais gerais
     totais_gerais = {
         "geral": round(sum(totais_dividendos["total_por_codigo"].values()), 2),
         "recebidos": round(sum(totais_dividendos["recebido_por_codigo"].values()), 2),
         "provisionados": round(sum(totais_dividendos["provisionado_por_codigo"].values()), 2)
     }
+
+    return render_template(
+        'dividendos.html',
+        dividendos_por_codigo=dividendos_por_codigo,
+        total_dividendos_por_codigo=totais_dividendos["total_por_codigo"],
+        total_dividendos_recebido_por_codigo=totais_dividendos["recebido_por_codigo"],
+        total_dividendos_provisionado_por_codigo=totais_dividendos["provisionado_por_codigo"],
+        total_geral_dividendos=totais_gerais["geral"],
+        total_geral_dividendos_recebidos=totais_gerais["recebidos"],
+        total_geral_dividendos_provisionados=totais_gerais["provisionados"],
+        mensal_recebidos=mensal_recebidos,
+        mensal_provisionados=mensal_provisionados
+    )
 
     return render_template(
         'dividendos.html',

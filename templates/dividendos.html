@@ -31,8 +31,19 @@
             <h4>Total Geral de Dividendos: R$ {{ total_geral_dividendos }}</h4>
         </div>
 
+        <!-- Gráfico -->
+        <div class="mt-5">
+            <canvas id="dividendosChart"></canvas>
+        </div>
+
+        <!-- Botões para alternar entre Data Com e Data Pagamento -->
+        <div class="mt-3 text-center">
+            <button id="btnMensalRecebidos" class="btn btn-primary">Dividendos Recebidos</button>
+            <button id="btnMensalProvisionado" class="btn btn-secondary">Dividendos Provisionados</button>
+        </div>
+
         <!-- Nav Tabs -->
-        <ul class="nav nav-tabs" id="dividendosTab" role="tablist">
+        <ul class="nav nav-tabs mt-5" id="dividendosTab" role="tablist">
             {% for codigo_ativo in dividendos_por_codigo.keys() %}
             <li class="nav-item">
                 <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ codigo_ativo }}" data-toggle="tab" href="#{{ codigo_ativo }}" role="tab" aria-controls="{{ codigo_ativo }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
@@ -94,8 +105,56 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const ctx = document.getElementById('dividendosChart').getContext('2d');
+        const mensalRecebidos = {{ mensal_recebidos | tojson }};
+        const mensalProvisionados = {{ mensal_provisionados | tojson }};
+
+        let currentData = mensalRecebidos;
+        let chart;
+
+        function renderChart(data) {
+            if (chart) chart.destroy();
+            const labels = Object.keys(data).sort();
+            const values = labels.map(key => data[key]);
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Dividendos (R$)',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Mês' } },
+                        y: { title: { display: true, text: 'Valor (R$)' } }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('btnMensalRecebidos').addEventListener('click', () => {
+            currentData = mensalRecebidos;
+            renderChart(currentData);
+        });
+
+        document.getElementById('btnMensalProvisionado').addEventListener('click', () => {
+            currentData = mensalProvisionados;
+            renderChart(currentData);
+        });
+
+        renderChart(currentData);
+    </script>
 </body>
 </html>
