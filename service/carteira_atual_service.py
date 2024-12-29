@@ -108,16 +108,16 @@ def consulta_carteira_atual(session):
 def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atual):
     if classe == 'renda_fixa':
         return precos_renda_fixa(ticker, preco_atual)
-    elif classe == 'fiis' and ticker == 'BCFF11':
-        return calcula_quantidade_ativo(user_id, ticker), 8.73, 7.28
+    elif classe == 'fiis' and ticker == 'BTHF11':
+        return 760, 10.21, 7.89
     elif classe == 'fiis' and ticker == 'VINO11':
         return calcula_quantidade_ativo(user_id, ticker), 9.26, preco_atual
     return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker, classe), preco_atual
 
 def precos_renda_fixa(ticker, preco_atual):
     precos = {
-        'TREND DI FIC FI RF SIMPLES': (34312.11, 1.28, preco_atual),
-        'TREND INB FIC FI RF SIMPLES': (751.83, 1.38, preco_atual)
+        'TREND DI FIC FI RF SIMPLES': (34312.11, 1.28, 1.30),
+        'TREND INB FIC FI RF SIMPLES': (751.83, 1.38, 1.48)
     }
     return precos.get(ticker, (0, 0, preco_atual))
 

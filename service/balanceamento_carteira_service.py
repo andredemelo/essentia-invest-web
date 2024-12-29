@@ -74,8 +74,8 @@ def obter_dados_ativo(user_id, ativo):
     preco_atual = ativo[3]
     
     if classe != 'renda_fixa':
-        if ticker == 'BCFF11':
-            return 950.0, 8.73, 7.28
+        if ticker == 'BTHF11':
+            return 760, 10.21, 7.89
         elif ticker == 'VINO11':
             return 1747.0, 9.26, preco_atual
         elif classe == 'etf_eua': 
