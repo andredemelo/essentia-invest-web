@@ -6,30 +6,66 @@
     <title>Dashboard - Essentia Invest</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/dashboard/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Bem-vindo, </br> {{ session['user_name'] }}</h2>
-        <p class="text-center">Esta é a área interna do sistema, acessível apenas para usuários logados.</p>
+    <!-- Navbar -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Essentia Invest" height="40"></a>
+            <div class="ml-auto">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+    </header>
 
-        <div class="text-center mt-4">
-            <a href="{{ url_for('carteira_ideal') }}" class="btn btn-primary">Carteira Ideal</a>
-            <a href="{{ url_for('carteira_atual') }}" class="btn btn-primary">Carteira Atual</a>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{{ url_for('balanceamento_carteira') }}" class="btn btn-primary">Balanceamento de Carteira</a>
-        </div>
-        <div class="text-center mt-4"></div>
-            <a href="{{ url_for('upload_transacoes') }}" class="btn btn-primary">Importar Transações</a>
-            <a href="{{ url_for('transacoes') }}" class="btn btn-primary">Listar Transações</a>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{{ url_for('upload_dividendos') }}" class="btn btn-primary">Importar Dividendos</a>
-            <a href="{{ url_for('dividendos') }}" class="btn btn-primary">Listar Dividendos</a>
-        </div>
-        <p class="text-center mt-4"><a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a></p>
-    </div>
+    <!-- Dashboard -->
+    <main class="dashboard">
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Bem-vindo, <br> {{ session['user_name'] }}</h2>
+            <p class="text-center lead">Gerencie seus investimentos de forma prática e eficiente.</p>
 
+            <div class="row text-center mt-5">
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('carteira_ideal') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-chart-pie"></i> Carteira Ideal
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('carteira_atual') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-wallet"></i> Carteira Atual
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('balanceamento_carteira') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-balance-scale"></i> Balanceamento de Carteira
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('upload_transacoes') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-upload"></i> Importar Transações
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('transacoes') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-list"></i> Listar Transações
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('upload_dividendos') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-coins"></i> Importar Dividendos
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('dividendos') }}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-hand-holding-usd"></i> Listar Dividendos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
