@@ -108,6 +108,65 @@
         </div>
     </div>
 
+    <!-- Modal para edição de alocação -->
+    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarModalLabel">Editar Alocação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/carteira_ideal" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="classe_ativo_modal_editar">Classe de Ativo:</label>
+                            <input type="text" class="form-control" id="classe_ativo_modal_editar" name="classe_ativo" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="porcentagem_modal_editar">Porcentagem:</label>
+                            <input type="number" class="form-control" id="porcentagem_modal_editar" name="porcentagem" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dividendo_desejado_editar">Dividendo Desejado:</label>
+                            <input type="number" class="form-control" id="dividendo_desejado_editar" name="dividendo_desejado" step="0.01" required>
+                        </div>
+                        <input type="hidden" id="classe_ativo_hidden_editar" name="classe_ativo_hidden">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para exclusão de alocação -->
+    <div class="modal fade" id="excluirModal" tabindex="-1" role="dialog" aria-labelledby="excluirModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="excluirModalLabel">Excluir Alocação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/excluir_alocacao" method="POST">
+                    <div class="modal-body">
+                        <p>Tem certeza de que deseja excluir a alocação para <strong><span id="classe_ativo_modal_excluir"></span></strong>?</p>
+                        <input type="hidden" id="classe_ativo_hidden_excluir" name="classe_ativo">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
