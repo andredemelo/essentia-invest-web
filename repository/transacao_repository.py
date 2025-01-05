@@ -39,9 +39,9 @@ def inserir_transacao(user_id, row):
     conn.commit()
     conn.close()
 
-def listar_todas_transacoes():
+def listar_todas_transacoes(user_id):
     conn, cursor = db_repository.inicializa_conexao_db()
-    cursor.execute('SELECT * FROM transacao ORDER BY codigo_ativo ASC, date(data_operacao) ASC')
+    cursor.execute('SELECT * FROM transacao WHERE user_id = ? ORDER BY codigo_ativo ASC, date(data_operacao) ASC', (user_id,))
     transacoes = cursor.fetchall()
     conn.close()
     return transacoes

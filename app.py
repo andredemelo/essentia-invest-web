@@ -117,7 +117,7 @@ def upload_transacoes():
 @app.route('/transacoes')
 @autenticacao_service.login_required
 def transacoes():
-    return transacao_service.lista_transacoes()
+    return transacao_service.lista_transacoes(session)
 
 @app.route('/upload_dividendos', methods=['GET', 'POST'])
 @autenticacao_service.login_required

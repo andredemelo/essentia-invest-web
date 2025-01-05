@@ -47,8 +47,9 @@ def import_transacoes(filepath, user_id):
     
     os.remove(filepath)
 
-def lista_transacoes():
-    consulta_transacoes = transacao_repository.listar_todas_transacoes()
+def lista_transacoes(session):
+    user_id = session['user_id']
+    consulta_transacoes = transacao_repository.listar_todas_transacoes(user_id)
     transacoes = {}
     totais = {'compras': 0, 'vendas': 0, 'bonificacoes': 0}
     totais_por_mes = defaultdict(lambda: {'compras': 0, 'vendas': 0, 'bonificacoes': 0})
