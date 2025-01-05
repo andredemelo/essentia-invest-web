@@ -62,13 +62,13 @@ def consulta_dividendos():
     
     mensal_recebidos = defaultdict(float)
     mensal_provisionados = defaultdict(float)
-    data_atual = datetime.now()
+    data_atual = datetime.now().date()
     
     for dividendo in dividendos:
         codigo_ativo, valor_total, data_com, data_pagamento = dividendo[3], dividendo[9], dividendo[10], dividendo[11]
         valor_total = float(valor_total.replace(',', '.')) if isinstance(valor_total, str) else float(valor_total)
         data_com = datetime.strptime(data_com, "%d/%m/%Y")
-        data_pagamento = datetime.strptime(data_pagamento, "%d/%m/%Y")
+        data_pagamento = datetime.strptime(data_pagamento, "%d/%m/%Y").date()
         
         if codigo_ativo not in dividendos_por_codigo:
             dividendos_por_codigo[codigo_ativo] = []
@@ -103,15 +103,4 @@ def consulta_dividendos():
         total_geral_dividendos_provisionados=totais_gerais["provisionados"],
         mensal_recebidos=mensal_recebidos,
         mensal_provisionados=mensal_provisionados
-    )
-
-    return render_template(
-        'dividendos.html',
-        dividendos_por_codigo=dividendos_por_codigo,
-        total_dividendos_por_codigo=totais_dividendos["total_por_codigo"],
-        total_dividendos_recebido_por_codigo=totais_dividendos["recebido_por_codigo"],
-        total_dividendos_provisionado_por_codigo=totais_dividendos["provisionado_por_codigo"],
-        total_geral_dividendos=totais_gerais["geral"],
-        total_geral_dividendos_recebidos=totais_gerais["recebidos"],
-        total_geral_dividendos_provisionados=totais_gerais["provisionados"]
     )
