@@ -5,54 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carteira Ideal - Essentia Invest</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        #graficoPizza {
-            width: 500px; 
-            height: 500px;
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/carteira_ideal/styles.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center">Carteira Ideal</h2>
-        <h3 class="mt-5">Alocações Atuais</h3>
-        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#adicionarModal">Adicionar Nova Alocação</button>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Classe de Ativo</th>
-                    <th>Porcentagem</th>
-                    <th>Dividendo Desejado</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for alocacao in alocacoes %}
-                <tr>
-                    <td>{{ alocacao[0].replace('_', ' ').title() }}</td>
-                    <td>{{ alocacao[1] }}%</td>
-                    <td>{{ alocacao[2] }}%</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}" data-dividendo="{{ alocacao[2] }}">Editar</button>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#excluirModal" data-classe="{{ alocacao[0] }}" data-porcentagem="{{ alocacao[1] }}">Excluir</button>
-                        <a class="btn btn-success btn-sm" href="{{ url_for('cadastrar_ativos', classe_ativo=alocacao[0]) }}">Cadastrar Ativo</a>
-                        <a class="btn btn-success btn-sm" href="{{ url_for('pergunta', classe_ativo=alocacao[0]) }}">Cadastrar Pergunta Avaliação</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong>{{ soma_total }}%</strong></td>
-                    <td> - </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Título principal -->
+        <div class="text-center mb-4">
+            <h1>Carteira Ideal</h1>
+        </div>
 
-        <!-- Gráfico de Pizza -->
-        <h3 class="mt-5">Alocação Ideal de Classes</h3>
-        <div class="text-center">
-            <canvas id="graficoPizza"></canvas>
+        <!-- Seção de alocações atuais -->
+        <div>
+            <h3 class="mb-3">Alocações Atuais</h3>
+            <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#adicionarModal">Adicionar Nova Alocação</button>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Classe de Ativo</th>
+                        <th>Porcentagem</th>
+                        <th>Dividendo Desejado</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alocacao in alocacoes %}
+                    <tr>
+                        <td>{{ alocacao[0].replace('_', ' ').title() }}</td>
+                        <td>{{ alocacao[1] }}%</td>
+                        <td>{{ alocacao[2] }}%</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm btn-custom" data-toggle="modal" data-target="#editarModal" 
+                                data-classe="{{ alocacao[0] }}" 
+                                data-porcentagem="{{ alocacao[1] }}" 
+                                data-dividendo="{{ alocacao[2] }}">Editar</button>
+                            <button class="btn btn-danger btn-sm btn-custom" data-toggle="modal" data-target="#excluirModal" 
+                                data-classe="{{ alocacao[0] }}" 
+                                data-porcentagem="{{ alocacao[1] }}">Excluir</button>
+                            <a class="btn btn-success btn-sm btn-custom" href="{{ url_for('cadastrar_ativos', classe_ativo=alocacao[0]) }}">Cadastrar Ativo</a>
+                            <a class="btn btn-info btn-sm" href="{{ url_for('pergunta', classe_ativo=alocacao[0]) }}">Cadastrar Pergunta</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>{{ soma_total }}%</strong></td>
+                        <td>-</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Gráfico de pizza -->
+        <div class="mt-5">
+            <h3 class="text-center">Alocação Ideal de Classes</h3>
+            <div class="d-flex justify-content-center mt-4">
+                <canvas id="graficoPizza"></canvas>
+            </div>
         </div>
     </div>
 
@@ -99,126 +108,13 @@
         </div>
     </div>
 
-    <!-- Modal para edição de alocação -->
-    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarModalLabel">Editar Alocação</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/carteira_ideal" method="POST">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="classe_ativo_modal_editar">Classe de Ativo:</label>
-                            <input type="text" class="form-control" id="classe_ativo_modal_editar" name="classe_ativo" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="porcentagem_modal_editar">Porcentagem:</label>
-                            <input type="number" class="form-control" id="porcentagem_modal_editar" name="porcentagem" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="dividendo_desejado_editar">Dividendo Desejado:</label>
-                            <input type="number" class="form-control" id="dividendo_desejado_editar" name="dividendo_desejado" step="0.01" required>
-                        </div>
-                        <input type="hidden" id="classe_ativo_hidden_editar" name="classe_ativo_hidden">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para exclusão de alocação -->
-    <div class="modal fade" id="excluirModal" tabindex="-1" role="dialog" aria-labelledby="excluirModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="excluirModalLabel">Excluir Alocação</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/excluir_alocacao" method="POST">
-                    <div class="modal-body">
-                        <p>Tem certeza de que deseja excluir a alocação para <strong><span id="classe_ativo_modal_excluir"></span></strong>?</p>
-                        <input type="hidden" id="classe_ativo_hidden_excluir" name="classe_ativo">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-danger">Excluir</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         const alocacoesJson = {{ alocacoes_json | tojson }};
-        const labels = Object.keys(alocacoesJson);
-        const data = Object.values(alocacoesJson);
-
-        var ctx = document.getElementById('graficoPizza').getContext('2d');
-        var graficoPizza = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys({{ alocacoes_json|tojson }}),
-                datasets: [{
-                    data: Object.values({{ alocacoes_json|tojson }}),
-                    backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#4BC0C0',
-                        '#9966FF',
-                        '#FF9F40',
-                        '#C9CBCF',
-                        '#FF5733',
-                        '#33FF57',
-                        '#3357FF'
-                    ],
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-
-        // Evento para abrir modal de edição com valores preenchidos
-        $('#editarModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var classeAtivo = button.data('classe');
-            var porcentagem = button.data('porcentagem');
-            var dividendo_desejado = button.data('dividendo');
-
-            var modal = $(this);
-            modal.find('.modal-body #classe_ativo_modal_editar').val(classeAtivo);
-            modal.find('.modal-body #porcentagem_modal_editar').val(porcentagem);
-            modal.find('.modal-body #dividendo_desejado_editar').val(dividendo_desejado);
-            modal.find('.modal-body #classe_ativo_hidden_editar').val(classeAtivo);
-        });
-
-        // Evento para abrir modal de exclusão com o valor correto
-        $('#excluirModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var classeAtivo = button.data('classe');
-
-            var modal = $(this);
-            modal.find('#classe_ativo_modal_excluir').text(classeAtivo);
-            modal.find('#classe_ativo_hidden_excluir').val(classeAtivo);
-        });
     </script>
+    <script src="../static/js/carteira_ideal/scripts.js"></script>
 </body>
 </html>

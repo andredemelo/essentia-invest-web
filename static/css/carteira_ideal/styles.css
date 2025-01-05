@@ -1,0 +1,13 @@
+#graficoPizza {
+    max-width: 100%;
+    height: auto;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-custom {
+    margin-right: 5px;
+}
