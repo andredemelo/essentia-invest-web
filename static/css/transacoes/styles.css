@@ -1,0 +1,72 @@
+/* Estilo geral */
+body {
+    background-color: #f8f9fa; /* Fundo claro */
+    font-family: 'Arial', sans-serif;
+    color: #343a40;
+}
+
+/* Cabeçalho */
+h2, h3 {
+    color: #007bff; /* Azul padrão */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Alertas */
+.alert h4 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.alert p {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Tabelas */
+.table-striped thead th {
+    background-color: #007bff;
+    color: white;
+}
+
+.table-striped tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-striped tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    color: #007bff;
+    font-weight: bold;
+    padding: 10px 15px;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Gráfico */
+#transacoesChart {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: white;
+}
+
+/* Container principal */
+.container {
+    max-width: 1000px;
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
