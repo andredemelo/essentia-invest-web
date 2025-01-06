@@ -5,6 +5,11 @@ body {
     color: #343a40;
 }
 
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 /* Cabeçalho */
 h2, h3 {
     color: #007bff; /* Azul padrão */

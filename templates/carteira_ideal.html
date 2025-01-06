@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="../static/css/carteira_ideal/styles.css">
 </head>
 <body>
+    <!-- Navbar -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Essentia Invest" height="40"></a>
+            <div class="ml-auto">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+    </header>
+    
     <div class="container mt-5">
         <!-- Título principal -->
         <div class="text-center mb-4">

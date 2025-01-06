@@ -5,6 +5,11 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+.header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 /* Títulos */
 h2, h3 {
     color: #007bff; /* Azul padrão do Bootstrap */
