@@ -49,50 +49,55 @@
             <button id="btnMensalProvisionado" class="btn btn-secondary">Dividendos Provisionados</button>
         </div>
 
-        <ul class="nav nav-tabs mt-5" id="dividendosTab" role="tablist">
-            {% for codigo_ativo in dividendos_por_codigo.keys() %}
-            <li class="nav-item">
-                <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ codigo_ativo }}" data-toggle="tab" href="#{{ codigo_ativo }}" role="tab" aria-controls="{{ codigo_ativo }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
-                    {{ codigo_ativo }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <div class="tab-content" id="dividendosTabContent">
-            {% for codigo_ativo, dividendos in dividendos_por_codigo.items() %}
-            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ codigo_ativo }}" role="tabpanel" aria-labelledby="tab-{{ codigo_ativo }}">
-                <h3 class="mt-4">{{ codigo_ativo }}</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Tipo</th>
-                            <th>Quantidade</th>
-                            <th>Valor</th>
-                            <th>Valor Total</th>
-                            <th>Valor Total Líquido</th>
-                            <th>Data Com</th>
-                            <th>Data Pagamento</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for dividendo in dividendos %}
-                        <tr>
-                            <td>{{ dividendo[2] }}</td>
-                            <td>{{ dividendo[5] }}</td>
-                            <td>{{ dividendo[6] }}</td>
-                            <td>{{ dividendo[7] }}</td>
-                            <td>{{ dividendo[8] }}</td>
-                            <td>{{ dividendo[9] }}</td>
-                            <td>{{ dividendo[10] }}</td>
-                            <td>{{ dividendo[11] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="container mt-5">
+            <h3 class="text-center">Dividendos Por Ativo</h3>
+        
+            <!-- Select Dropdown para escolher o Ativo -->
+            <div class="form-group">
+                <label for="selectAtivo" class="h5">Selecione um Ativo:</label>
+                <select class="form-control" id="selectAtivo">
+                    {% for codigo_ativo in dividendos_por_codigo.keys() %}
+                    <option value="{{ codigo_ativo }}">{{ codigo_ativo }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            {% endfor %}
+        
+            <!-- Div para exibir os dividendos do ativo selecionado -->
+            <div id="dividendosAtivo">
+                {% for codigo_ativo, dividendos in dividendos_por_codigo.items() %}
+                <div class="ativo-dividendos" id="ativo-{{ codigo_ativo }}" {% if not loop.first %}style="display: none;"{% endif %}>
+                    <h4 class="mt-4">Dividendos de {{ codigo_ativo }}</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Categoria</th>
+                                <th>Tipo</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                                <th>Valor Total</th>
+                                <th>Valor Total Líquido</th>
+                                <th>Data Com</th>
+                                <th>Data Pagamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dividendo in dividendos %}
+                            <tr>
+                                <td>{{ dividendo[2] }}</td>
+                                <td>{{ dividendo[5] }}</td>
+                                <td>{{ dividendo[6] }}</td>
+                                <td>{{ dividendo[7] }}</td>
+                                <td>{{ dividendo[8] }}</td>
+                                <td>{{ dividendo[9] }}</td>
+                                <td>{{ dividendo[10] }}</td>
+                                <td>{{ dividendo[11] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 

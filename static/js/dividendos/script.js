@@ -47,3 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderChart(currentData);
 });
+
+// Script para manipular a exibição dos dividendos conforme a seleção do ativo
+document.addEventListener("DOMContentLoaded", function () {
+    const selectAtivo = document.getElementById("selectAtivo");
+    const dividendosAtivos = document.querySelectorAll(".ativo-dividendos");
+
+    // Evento para trocar a exibição ao selecionar um ativo
+    selectAtivo.addEventListener("change", function () {
+        const ativoSelecionado = this.value;
+
+        // Esconde todas as tabelas de dividendos
+        dividendosAtivos.forEach(div => {
+            div.style.display = "none";
+        });
+
+        // Mostra a tabela do ativo selecionado
+        const ativoDiv = document.getElementById("ativo-" + ativoSelecionado);
+        if (ativoDiv) {
+            ativoDiv.style.display = "block";
+        }
+    });
+});

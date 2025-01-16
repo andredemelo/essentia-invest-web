@@ -49,3 +49,25 @@ const transacoesChart = new Chart(ctx, {
         },
     },
 });
+
+// Script para manipular a exibição das transações
+document.addEventListener("DOMContentLoaded", function () {
+    const selectAtivo = document.getElementById("selectAtivo");
+    const transacoesAtivos = document.querySelectorAll(".ativo-transacoes");
+
+    // Evento para trocar a exibição ao selecionar um ativo
+    selectAtivo.addEventListener("change", function () {
+        const ativoSelecionado = this.value;
+
+        // Esconde todas as tabelas de transações
+        transacoesAtivos.forEach(div => {
+            div.style.display = "none";
+        });
+
+        // Mostra a tabela do ativo selecionado
+        const ativoDiv = document.getElementById("ativo-" + ativoSelecionado);
+        if (ativoDiv) {
+            ativoDiv.style.display = "block";
+        }
+    });
+});

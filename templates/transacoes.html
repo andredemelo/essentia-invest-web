@@ -51,51 +51,54 @@
             <canvas id="transacoesChart" width="400" height="200"></canvas>
         </div>
 
-        <!-- Nav Tabs -->
-        <ul class="nav nav-tabs" id="transacoesTab" role="tablist">
-            {% for codigo_ativo in transacoes.keys() %}
-            <li class="nav-item">
-                <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ codigo_ativo }}" data-toggle="tab" href="#{{ codigo_ativo }}" role="tab" aria-controls="{{ codigo_ativo }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
-                    {{ codigo_ativo }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <!-- Tab Panes -->
-        <div class="tab-content" id="transacoesTabContent">
-            {% for codigo_ativo, dados in transacoes.items() %}
-            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ codigo_ativo }}" role="tabpanel" aria-labelledby="tab-{{ codigo_ativo }}">
-                <h3 class="mt-4">{{ codigo_ativo }}</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Data Operação</th>
-                            <th>Categoria</th>
-                            <th>Código Ativo</th>
-                            <th>Operação</th>
-                            <th>Quantidade</th>
-                            <th>Preço Unitário</th>
-                            <th>Corretora</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for transacao in dados.transacoes %}
-                        <tr>
-                            <td>{{ transacao[2] }}</td>
-                            <td>{{ transacao[3] }}</td>
-                            <td>{{ transacao[4] }}</td>
-                            <td>{{ transacao[5] }}</td>
-                            <td>{{ transacao[6] }}</td>
-                            <td>{{ transacao[7] }}</td>
-                            <td>{{ transacao[8] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="container mt-5">
+            <h3 class="text-center">Transações Por Ativo</h3>
+        
+            <!-- Select Dropdown -->
+            <div class="form-group">
+                <label for="selectAtivo" class="h5">Selecione um Ativo:</label>
+                <select class="form-control" id="selectAtivo">
+                    {% for codigo_ativo in transacoes.keys() %}
+                    <option value="{{ codigo_ativo }}">{{ codigo_ativo }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            {% endfor %}
-        </div>
+        
+            <!-- Div para exibir as transações -->
+            <div id="transacoesAtivo">
+                {% for codigo_ativo, dados in transacoes.items() %}
+                <div class="ativo-transacoes" id="ativo-{{ codigo_ativo }}" {% if not loop.first %}style="display: none;"{% endif %}>
+                    <h4 class="mt-4">Transações de {{ codigo_ativo }}</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Data Operação</th>
+                                <th>Categoria</th>
+                                <th>Código Ativo</th>
+                                <th>Operação</th>
+                                <th>Quantidade</th>
+                                <th>Preço Unitário</th>
+                                <th>Corretora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transacao in dados.transacoes %}
+                            <tr>
+                                <td>{{ transacao[2] }}</td>
+                                <td>{{ transacao[3] }}</td>
+                                <td>{{ transacao[4] }}</td>
+                                <td>{{ transacao[5] }}</td>
+                                <td>{{ transacao[6] }}</td>
+                                <td>{{ transacao[7] }}</td>
+                                <td>{{ transacao[8] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>    
     </div>
 
     <!-- Scripts -->
