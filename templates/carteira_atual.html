@@ -20,6 +20,8 @@
 
     <div class="container mt-5">
         <h2 class="text-center">Carteira Atual</h2>
+        
+        <!-- Tabela de Classe na Carteira -->
         <h3>Classe na Carteira</h3>
         <table class="table table-striped">
             <thead>
@@ -32,7 +34,7 @@
             </thead>
             <tbody>
                 {% for classe, dados in consolidado_classe.items() %}
-                <tr>
+                <tr data-toggle="collapse" data-target="#ativos-{{ loop.index }}" aria-expanded="false" aria-controls="ativos-{{ loop.index }}">
                     <td>{{ classe.replace('_', ' ').title() }}</td>
                     <td>R$ {{ dados.total_investido }}</td>
                     <td>R$ {{ dados.total_valor }}</td>
@@ -40,34 +42,8 @@
                         R$ {{ dados.total_diferenca }}
                     </td>
                 </tr>
-                {% endfor %}
-                <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong>R$ {{ soma_total_valor }}</strong></td>
-                    <td><strong>R$ {{ soma_total_valor_investido }}</strong></td>
-                    <td class="font-weight-bold {% if soma_total_valor_diferenca < 0 %}text-danger{% elif soma_total_valor_diferenca > 0 %}text-success{% endif %}">
-                        <strong>R$ {{ soma_total_valor_diferenca }}</strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h3 class="mt-5">Ativos na Carteira</h3>
-        <ul class="nav nav-tabs" id="tabAtivos" role="tablist">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if loop.first %}active{% endif %}" id="ativo-{{ classe }}-tab" data-toggle="tab" href="#ativo-{{ classe }}" role="tab" aria-controls="ativo-{{ classe }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
-                            {{ classe.replace('_', ' ').title() }}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <div class="tab-content" id="tabAtivosContent">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="ativo-{{ classe }}" role="tabpanel" aria-labelledby="ativo-{{ classe }}-tab">
+                <tr class="collapse" id="ativos-{{ loop.index }}">
+                    <td colspan="4">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -76,12 +52,11 @@
                                     <th>Preço Médio</th>
                                     <th>Preço Atual</th>
                                     <th>Rentabilidade</th>
-                                    <th>Total Atual</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for ativo in dados_ativos if ativo.classe == classe %}
-                                <tr>
+                                <tr data-toggle="modal" data-target="#modalPrecoJusto" data-ticker="{{ ativo.ticker }}" data-preco-atual="{{ ativo.preco_atual }}" data-preco-bazin="{{ ativo.preco_justo_bazin }}" data-preco-graham="{{ ativo.preco_justo_graham }}">
                                     <td>{{ ativo.ticker }}</td>
                                     <td>{{ ativo.quantidade }}</td>
                                     <td>R$ {{ ativo.preco_medio }}</td>
@@ -89,60 +64,43 @@
                                     <td class="font-weight-bold {% if ativo.valor_diferenca < 0 %}text-danger{% elif ativo.valor_diferenca > 0 %}text-success{% endif %}">
                                         R$ {{ ativo.valor_diferenca }}
                                     </td>
-                                    <td>R$ {{ ativo.total_atual }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-        <h3 class="mt-5">Preço Justo</h3>
-        <ul class="nav nav-tabs" id="tabPrecoJusto" role="tablist">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if loop.first %}active{% endif %}" id="precoJusto-{{ classe }}-tab" data-toggle="tab" href="#precoJusto-{{ classe }}" role="tab" aria-controls="precoJusto-{{ classe }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
-                            {{ classe.replace('_', ' ').title() }}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <div class="tab-content" id="tabPrecoJustoContent">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="precoJusto-{{ classe }}" role="tabpanel" aria-labelledby="precoJusto-{{ classe }}-tab">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Ativo</th>
-                                    <th>Preço Atual</th>
-                                    <th>Preço Justo Bazin</th>
-                                    <th>Preço Justo Graham</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for ativo in dados_ativos if ativo.classe == classe %}
-                                <tr>
-                                    <td>{{ ativo.ticker }}</td>
-                                    <td>R$ {{ ativo.preco_atual }}</td>
-                                    <td>R$ {{ ativo.preco_justo_bazin }}</td>
-                                    <td>R$ {{ ativo.preco_justo_graham }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-            {% endfor %}
+    <!-- Modal de Preço Justo -->
+    <div class="modal fade" id="modalPrecoJusto" tabindex="-1" role="dialog" aria-labelledby="modalPrecoJustoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPrecoJustoLabel">Detalhes do Ativo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Ativo:</strong> <span id="modalTicker"></span></p>
+                    <p><strong>Preço Atual:</strong> R$ <span id="modalPrecoAtual"></span></p>
+                    <p><strong>Preço Justo Bazin:</strong> R$ <span id="modalPrecoBazin"></span></p>
+                    <p><strong>Preço Justo Graham:</strong> R$ <span id="modalPrecoGraham"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../static/js/carteira_atual/scripts.js"></script>
 </body>
 </html>
