@@ -137,8 +137,8 @@ if __name__ == '__main__':
     init_db()
     
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=8, minute=30)
-    scheduler.add_job(scheduler_atualiza_historico_preco, 'cron', hour=8, minute=30)
+    scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=7, minute=30)
+    scheduler.add_job(scheduler_atualiza_historico_preco, 'cron', hour=7, minute=30)
     scheduler.start()
 
     app.run(debug=True)

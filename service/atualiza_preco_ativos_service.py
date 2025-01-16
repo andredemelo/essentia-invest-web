@@ -7,8 +7,8 @@ import util.conversor as conversor
 from datetime import datetime, timedelta
 
 RENDA_FIXA_PRECOS_ESPECIAIS = {
-    'TREND DI FIC FI RF SIMPLES': 1.30,
-    'TREND INB FIC FI RF SIMPLES': 1.48
+    'TREND DI FIC FI RF SIMPLES': 1.31,
+    'TREND INB FIC FI RF SIMPLES': 1.49
 }
 
 def obter_preco_atual(ticker, classe):
@@ -42,7 +42,7 @@ def atualiza_preco_atual():
         
         carteira_ideal_repository.atualiza_dados__ativo(classe, ticker, preco_atual, lpa, vpa)
     
-    print('Atualização concluída!')
+    print('Atualização de Preço Atual concluída!')
 
 def atualiza_historico_preco():
     print('Iniciando atualização de histórico de preço...')
@@ -74,4 +74,4 @@ def atualiza_historico_preco():
             else:
                 print('Preço já cadastrado no banco de dados!')
 
-    print('Atualização concluída!')
+    print('Atualização de Histórico de Preço concluída!')

@@ -33,7 +33,17 @@
             </thead>
             <tbody>
                 {% for classe, dados in consolidado_classe.items() %}
-                <tr>
+                <tr 
+                    {% if dados.necessidade_aporte == 'Aportar' %}
+                        data-toggle="collapse" 
+                        data-target="#collapse-{{ loop.index }}" 
+                        aria-expanded="false" 
+                        aria-controls="collapse-{{ loop.index }}"
+                        class="table-row-expandable"
+                    {% else %}
+                        class="table-row-modal" data-toggle="modal" data-target="#modal-aviso"
+                    {% endif %}
+                >
                     <td>{{ classe.replace('_', ' ').title() }}</td>
                     <td>{{ dados.porcentagem_atual }} %</td>
                     <td>{{ dados.porcentagem_ideal }} %</td>
@@ -42,26 +52,9 @@
                     </td>
                     <td>{{ dados.necessidade_aporte }}</td>
                 </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h3 class="mt-5">Carteira Atual / Carteira Ideal - Ativos</h3>
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if loop.first %}active{% endif %}" id="{{ classe }}-tab" data-toggle="tab" href="#{{ classe }}" role="tab" aria-controls="{{ classe }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
-                            {{ classe.replace('_', ' ').title() }}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            {% for classe in ['acao', 'fiis', 'stocks', 'reits', 'etf_brasil', 'etf_eua', 'bdr', 'renda_fixa'] %}
-                {% if dados_ativos | selectattr('classe', 'equalto', classe) | list %}
-                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ classe }}" role="tabpanel" aria-labelledby="{{ classe }}-tab">
+                {% if dados.necessidade_aporte == 'Aportar' %}
+                <tr class="collapse" id="collapse-{{ loop.index }}">
+                    <td colspan="5">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -86,9 +79,31 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
+                    </td>
+                </tr>
                 {% endif %}
-            {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-aviso" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Aviso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Não é possível detalhar os ativos dessa classe, pois ela está acima do recomendado!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
         </div>
     </div>
 

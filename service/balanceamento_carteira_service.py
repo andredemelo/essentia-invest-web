@@ -83,9 +83,9 @@ def obter_dados_ativo(user_id, ativo):
         else:
             return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker), preco_atual
     elif classe == 'renda_fixa' and ticker == 'TREND DI FIC FI RF SIMPLES':
-        return 34312.11, 1.28, 1.30
+        return 34874.24, 1.28, 1.31
     elif classe == 'renda_fixa' and ticker == 'TREND INB FIC FI RF SIMPLES':
-        return 751.83, 1.38, 1.48
+        return 804.60, 1.38, 1.49
 
 def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio):
     for classe, dados in consolidado_classe.items():
