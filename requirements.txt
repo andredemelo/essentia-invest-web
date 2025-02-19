@@ -1,0 +1,8 @@
+Flask
+Flask-Session
+apscheduler
+requests
+yfinance
+pandas
+werkzeug
+openpyxl

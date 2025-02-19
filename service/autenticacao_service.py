@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import render_template, redirect, url_for, flash, session, request
+
 import repository.autenticacao_repository as autenticacao_repository
 
 def login_required(f):

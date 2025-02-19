@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+#      - OLLAMA_HOST=http://localhost:11434
+#      - OPENWEBUI_HOST=http://localhost:8080
+#    depends_on:
+#      - ollama
+#      - openwebui
+
+#  ollama:
+#    image: ollama/ollama
+#    container_name: ollama
+#    ports:
+#      - "11434:11434"
+#    entrypoint: ["/bin/sh", "-c", "ollama pull llama3.2:1b && ollama serve"]
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:11434/health"]
+#      interval: 10s
+#      retries: 5
+#      start_period: 30s
+#      timeout: 10s
+
+#  openwebui:
+#    image: ghcr.io/open-webui/open-webui:latest
+#    container_name: openwebui
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - OLLAMA_BASE_URL=http://localhost:11434
+#    restart: unless-stopped
+#    depends_on:
+#      ollama:
+#        condition: service_healthy
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+#      interval: 10s
+#      retries: 5
+#      start_period: 30s
+#      timeout: 10s
+
+#volumes:
+#  openwebui_data:

@@ -2,13 +2,13 @@ from flask import render_template
 from datetime import datetime
 import math
 import util.conversor as conversor
-import repository.carteira_ideal_repository as carteira_ideal_repo
-import repository.transacao_repository as transacao_repo
-import repository.dividendos_repository as dividendos_repo
+import repository.carteira_ideal_repository as carteira_ideal_repository
+import repository.transacao_repository as transacao_repository
+import repository.dividendos_repository as dividendos_repository
 
 def consulta_carteira_atual(session):
     user_id = session['user_id']
-    ativos_carteira = carteira_ideal_repo.consulta_ativos_carteira(user_id)
+    ativos_carteira = carteira_ideal_repository.consulta_ativos_carteira(user_id)
 
     # Organizar os ativos por classe de ativo
     ativos_por_classe = {}
@@ -66,7 +66,7 @@ def consulta_carteira_atual(session):
     # Calcular porcentagens ideais e necessidade de aporte para cada classe
     soma_porcentagem_atual, soma_porcentagem_ideal = 0, 0
     for classe, dados in consolidado_classe.items():
-        porcentagem_ideal = carteira_ideal_repo.consulta_porcentagem(user_id, classe)[0] or 0
+        porcentagem_ideal = carteira_ideal_repository.consulta_porcentagem(user_id, classe)[0] or 0
         porcentagem_atual = (dados['total_valor'] / total_patrimonio) * 100 if total_patrimonio != 0 else 0
         diferenca_porcentagem = round(porcentagem_ideal - porcentagem_atual, 2)
 
@@ -109,25 +109,27 @@ def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atua
     if classe == 'renda_fixa':
         return precos_renda_fixa(ticker, preco_atual)
     elif classe == 'fiis' and ticker == 'BTHF11':
-        return 760, 10.21, 7.89
+        return 760, 10.21, 6.94
     elif classe == 'fiis' and ticker == 'VINO11':
         return calcula_quantidade_ativo(user_id, ticker), 9.26, preco_atual
+    elif classe == 'etf_eua' and ticker == 'SCHD':
+        return calcula_quantidade_ativo(user_id, ticker), conversor.dolar_para_real(26.42), preco_atual
     return calcula_quantidade_ativo(user_id, ticker), calcula_preco_medio(user_id, ticker, classe), preco_atual
 
 def precos_renda_fixa(ticker, preco_atual):
     precos = {
-        'TREND DI FIC FI RF SIMPLES': (34874.24, 1.28, 1.31),
-        'TREND INB FIC FI RF SIMPLES': (804.60, 1.38, 1.49)
+        'TREND DI FIC FI RF SIMPLES': (36286.43, 1.28, 1.32),
+        'TREND INB FIC FI RF SIMPLES': (838.70, 1.39, 1.50)
     }
     return precos.get(ticker, (0, 0, preco_atual))
 
 def calcula_quantidade_ativo(user_id, ticker):
-    transacoes = transacao_repo.consulta_transacoes_ativo(user_id, ticker)
+    transacoes = transacao_repository.consulta_transacoes_ativo(user_id, ticker)
     quantidade_total = sum(float(t[1].replace(',', '.')) * (1 if t[0] in {'C', 'B'} else -1) for t in transacoes)
     return round(quantidade_total, 2)
 
 def calcula_preco_medio(user_id, ticker, classe):
-    transacoes = transacao_repo.consulta_transacoes_ativo(user_id, ticker)
+    transacoes = transacao_repository.consulta_transacoes_ativo(user_id, ticker)
     valor_total, quantidade_total = 0, 0
     for operacao, quantidade, preco in transacoes:
         quantidade = float(quantidade.replace(',', '.'))
@@ -144,14 +146,14 @@ def calcula_preco_medio(user_id, ticker, classe):
 
 def calcular_preco_justo_bazin(user_id, ticker, classe):
     ano_consulta = str(datetime.now().year - 1)
-    dividendos = dividendos_repo.consulta_dividendos_do_ano(ticker, ano_consulta)
+    dividendos = dividendos_repository.consulta_dividendos_do_ano(ticker, ano_consulta)
     valor_dividendo_anual = sum(
         float(d[0].replace(',', '.')) if isinstance(d[0], str) else d[0]  # Verifica se é uma string
         for d in dividendos
     )
-    dividend_yield_desejado = carteira_ideal_repo.consulta_dividendo_desejado_carteira_ideal(user_id, classe)[0] or 0
+    dividend_yield_desejado = carteira_ideal_repository.consulta_dividendo_desejado_carteira_ideal(user_id, classe)[0] or 0
     return valor_dividendo_anual / (dividend_yield_desejado / 100) if dividend_yield_desejado else 0
 
 def calcula_preco_justo_benjamin_graham(user_id, ticker, classe):
-    lpa, vpa = next(iter(carteira_ideal_repo.consulta_indicadores_ativo(user_id, classe, ticker)), (0, 0))
+    lpa, vpa = next(iter(carteira_ideal_repository.consulta_indicadores_ativo(user_id, classe, ticker)), (0, 0))
     return math.sqrt(22.5 * lpa * vpa) if lpa and vpa else 0

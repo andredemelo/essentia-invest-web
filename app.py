@@ -11,6 +11,7 @@ import service.balanceamento_carteira_service as balanceamento_carteira_service
 import service.transacao_service as transacao_service
 import service.dividendos_service as dividendos_service
 import service.pergunta_service as pergunta_service
+import service.chatbot_service as chat_chatbot
 
 app = Flask(__name__)
 app.secret_key = 'EssentiaInvest'
@@ -133,6 +134,10 @@ def dividendos():
 def logout():
     return autenticacao_service.efetua_logout()
 
+@app.route("/chatbot", methods=["POST"])
+def chatbot():
+    return chat_chatbot.chat_chatbot()
+
 if __name__ == '__main__':
     init_db()
     
@@ -141,4 +146,4 @@ if __name__ == '__main__':
     scheduler.add_job(scheduler_atualiza_historico_preco, 'cron', hour=7, minute=30)
     scheduler.start()
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
