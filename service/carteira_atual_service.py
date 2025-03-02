@@ -118,8 +118,8 @@ def obter_quantidade_preco_medio_preco_atual(user_id, ticker, classe, preco_atua
 
 def precos_renda_fixa(ticker, preco_atual):
     precos = {
-        'TREND DI FIC FI RF SIMPLES': (36286.43, 1.28, 1.32),
-        'TREND INB FIC FI RF SIMPLES': (838.70, 1.39, 1.50)
+        'TREND DI FIC FI RF SIMPLES': (36286.43, 1.28, 1.33),
+        'TREND INB FIC FI RF SIMPLES': (838.70, 1.39, 1.51)
     }
     return precos.get(ticker, (0, 0, preco_atual))
 
