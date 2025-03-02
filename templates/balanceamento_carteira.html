@@ -28,6 +28,7 @@
                     <th>% Atual</th>
                     <th>% Ideal</th>
                     <th>Diferença</th>
+                    <th>Valor em R$</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -50,11 +51,14 @@
                     <td class="font-weight-bold {% if dados.diferenca_aporte < 0 %}text-danger{% elif dados.diferenca_aporte > 0 %}text-success{% endif %}">
                         {{ dados.diferenca_aporte }} %
                     </td>
+                    <td class="font-weight-bold {% if dados.necessidade_aporte == 'Aportar' %}text-success{% else %}text-danger{% endif %}">
+                        R$ {{ dados.valor_aporte | round(2) }}
+                    </td>
                     <td>{{ dados.necessidade_aporte }}</td>
                 </tr>
                 {% if dados.necessidade_aporte == 'Aportar' %}
                 <tr class="collapse" id="collapse-{{ loop.index }}">
-                    <td colspan="5">
+                    <td colspan="6">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -62,6 +66,7 @@
                                     <th>% Ideal</th>
                                     <th>% Atual</th>
                                     <th>Diferença</th>
+                                    <th>Valor em R$</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -73,6 +78,9 @@
                                     <td>{{ ativo.porcentagem_atual }} %</td>
                                     <td class="font-weight-bold {% if ativo.diferenca_aporte < 0 %}text-danger{% elif ativo.diferenca_aporte > 0 %}text-success{% endif %}">
                                         {{ ativo.diferenca_aporte }} %
+                                    </td>
+                                    <td class="font-weight-bold {% if ativo.valor_aporte < 0 %}text-danger{% elif ativo.valor_aporte > 0 %}text-success{% endif %}">
+                                        R$ {{ ativo.valor_aporte }}
                                     </td>
                                     <td>{{ ativo.necessidade_aporte }}</td>
                                 </tr>

@@ -12,15 +12,12 @@ def consulta_balanceamento_carteira(session):
     user_id = session['user_id']
     ativos_carteira = carteira_ideal_repository.consulta_ativos_carteira(user_id)
     
-    # Organizar os ativos por classe de ativo
     ativos_por_classe = agrupar_ativos_por_classe(ativos_carteira)
     
     dados_ativos, total_patrimonio, consolidado_classe = calcular_total_ativos(user_id, ativos_por_classe)
     
-    # Calcular porcentagem ideal e necessidade de aporte
     consolidado_classe = calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio)
     
-    # Calcular porcentagem ideal para cada ativo individualmente
     soma_total_notas = sum(dados['total_notas'] for dados in consolidado_classe.values())
     dados_ativos = calcular_balanceamento_individual(dados_ativos, consolidado_classe, soma_total_notas, total_patrimonio)
 
@@ -92,20 +89,24 @@ def calcular_balanceamento_classe(user_id, consolidado_classe, total_patrimonio)
         porcentagem_ideal = carteira_ideal_repository.consulta_porcentagem(user_id, classe)
         porcentagem_ideal = porcentagem_ideal[0] if porcentagem_ideal else 0
         porcentagem_atual = (dados['total_valor'] / total_patrimonio) * 100 if total_patrimonio != 0 else 0
-        necessidade_aporte = 'Aportar' if porcentagem_atual < porcentagem_ideal else 'Esperar'
-        diferenca_porcentagem = round(porcentagem_ideal - porcentagem_atual, 2)
+        diferenca_porcentagem = porcentagem_ideal - porcentagem_atual
+        valor_aporte = (diferenca_porcentagem / 100) * total_patrimonio
+
+        necessidade_aporte = 'Aportar' if diferenca_porcentagem > 0 else 'Esperar'
 
         dados.update({
             'porcentagem_atual': round(porcentagem_atual, 2),
             'porcentagem_ideal': porcentagem_ideal,
             'necessidade_aporte': necessidade_aporte,
-            'diferenca_aporte': diferenca_porcentagem
+            'diferenca_aporte': round(diferenca_porcentagem, 2),
+            'valor_aporte': round(valor_aporte, 2)
         })
     
     return consolidado_classe
 
 def calcular_balanceamento_individual(dados_ativos, consolidado_classe, soma_total_notas, total_patrimonio):
     for ativo in dados_ativos:
+        ticker = ativo['ticker']
         classe = ativo['classe']
         nota = ativo['nota']
         porcentagem_ideal_atualizado = round((nota * 100) / soma_total_notas, 2) if soma_total_notas != 0 else 0
@@ -115,11 +116,20 @@ def calcular_balanceamento_individual(dados_ativos, consolidado_classe, soma_tot
         porcentagem_atual = (total_atual / total_patrimonio) * 100 if total_patrimonio != 0 else 0
         ativo['porcentagem_atual'] = round(porcentagem_atual, 2)
 
-        necessidade_aporte = 'Aportar' if porcentagem_atual < porcentagem_ideal_atualizado else 'Esperar'
-        ativo['necessidade_aporte'] = necessidade_aporte
-
         diferenca_aporte = porcentagem_ideal_atualizado - porcentagem_atual
-        ativo['diferenca_aporte'] = round(diferenca_aporte, 2)
+
+        # Proporcional ao total da classe
+        total_valor_classe = consolidado_classe[classe]['total_valor']
+        valor_aporte_classe = consolidado_classe[classe]['valor_aporte']
+        valor_aporte = ((valor_aporte_classe * diferenca_aporte) / 100)
+
+        necessidade_aporte = 'Aportar' if diferenca_aporte > 0 else 'Esperar'
+
+        ativo.update({
+            'necessidade_aporte': necessidade_aporte,
+            'diferenca_aporte': round(diferenca_aporte, 2),
+            'valor_aporte': round(valor_aporte, 2)
+        })
 
     return dados_ativos
 
