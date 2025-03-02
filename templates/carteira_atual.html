@@ -71,6 +71,14 @@
                     </td>
                 </tr>
                 {% endfor %}
+                <tr class="font-weight-bold bg-light">
+                    <td>Total</td>
+                    <td>R$ {{ soma_total_valor_investido }}</td>
+                    <td>R$ {{ soma_total_valor }}</td>
+                    <td class="{% if soma_total_valor_diferenca < 0 %}text-danger{% elif soma_total_valor_diferenca > 0 %}text-success{% endif %}">
+                        R$ {{ soma_total_valor_diferenca }}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
