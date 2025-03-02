@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, session, request
+from flask import render_template, redirect, url_for, flash, session, request, jsonify
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from collections import defaultdict
@@ -104,3 +104,44 @@ def consulta_dividendos():
         mensal_recebidos=mensal_recebidos,
         mensal_provisionados=mensal_provisionados
     )
+
+def filtrar_dividendos(request):
+    tipo_data = request.args.get('tipo')
+    mes_selecionado = request.args.get('mes')
+    
+    if mes_selecionado:
+        dividendos_filtrados = filtrar_dividendos_por_mes(tipo_data, mes_selecionado)
+        # Transforma os dividendos filtrados em um formato serializável
+        dividendos_serializados = []
+        for dividendo in dividendos_filtrados:
+            dividendo_dict = {
+                "categoria": dividendo[2],
+                "tipo": dividendo[5],
+                "quantidade": dividendo[6],
+                "valor": dividendo[7],
+                "valor_total": dividendo[8],
+                "valor_total_liquido": dividendo[9],
+                "data_com": dividendo[10],
+                "data_pagamento": dividendo[11]
+            }
+            dividendos_serializados.append(dividendo_dict)
+        
+        return jsonify(dividendos_serializados)
+    else:
+        return jsonify({"error": "Nenhum mês selecionado"}), 400
+
+def filtrar_dividendos_por_mes(tipo_data, mes_selecionado):
+    """Filtra os dividendos com base no tipo de data e no mês selecionado."""
+    dividendos = dividendos_repository.consulta_todos_dividendos()
+    
+    dividendos_filtrados = []
+    for dividendo in dividendos:
+        data_com = datetime.strptime(dividendo[10], "%d/%m/%Y").date()
+        data_pagamento = datetime.strptime(dividendo[11], "%d/%m/%Y").date()
+        
+        if tipo_data == "data_com" and data_com.strftime('%Y-%m') == mes_selecionado:
+            dividendos_filtrados.append(dividendo)
+        elif tipo_data == "data_pagamento" and data_pagamento.strftime('%Y-%m') == mes_selecionado:
+            dividendos_filtrados.append(dividendo)
+    
+    return dividendos_filtrados

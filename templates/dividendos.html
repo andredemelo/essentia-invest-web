@@ -50,53 +50,101 @@
         </div>
 
         <div class="container mt-5">
-            <h3 class="text-center">Dividendos Por Ativo</h3>
+            <h3 class="text-center">Consulta de Dividendos</h3>
         
-            <!-- Select Dropdown para escolher o Ativo -->
-            <div class="form-group">
-                <label for="selectAtivo" class="h5">Selecione um Ativo:</label>
-                <select class="form-control" id="selectAtivo">
-                    {% for codigo_ativo in dividendos_por_codigo.keys() %}
-                    <option value="{{ codigo_ativo }}">{{ codigo_ativo }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <!-- Abas -->
+            <ul class="nav nav-tabs" id="dividendosTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="ativos-tab" data-toggle="tab" href="#ativos" role="tab">Dividendos Por Ativo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="datas-tab" data-toggle="tab" href="#datas" role="tab">Dividendos Por Mês</a>
+                </li>
+            </ul>
         
-            <!-- Div para exibir os dividendos do ativo selecionado -->
-            <div id="dividendosAtivo">
-                {% for codigo_ativo, dividendos in dividendos_por_codigo.items() %}
-                <div class="ativo-dividendos" id="ativo-{{ codigo_ativo }}" {% if not loop.first %}style="display: none;"{% endif %}>
-                    <h4 class="mt-4">Dividendos de {{ codigo_ativo }}</h4>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Categoria</th>
-                                <th>Tipo</th>
-                                <th>Quantidade</th>
-                                <th>Valor</th>
-                                <th>Valor Total</th>
-                                <th>Valor Total Líquido</th>
-                                <th>Data Com</th>
-                                <th>Data Pagamento</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for dividendo in dividendos %}
-                            <tr>
-                                <td>{{ dividendo[2] }}</td>
-                                <td>{{ dividendo[5] }}</td>
-                                <td>{{ dividendo[6] }}</td>
-                                <td>{{ dividendo[7] }}</td>
-                                <td>{{ dividendo[8] }}</td>
-                                <td>{{ dividendo[9] }}</td>
-                                <td>{{ dividendo[10] }}</td>
-                                <td>{{ dividendo[11] }}</td>
-                            </tr>
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content mt-3" id="dividendosTabContent">
+                <!-- Aba Dividendos Por Ativo -->
+                <div class="tab-pane fade show active" id="ativos" role="tabpanel">
+                    <div class="form-group">
+                        <label for="selectAtivo" class="h5">Selecione um Ativo:</label>
+                        <select class="form-control" id="selectAtivo">
+                            {% for codigo_ativo in dividendos_por_codigo.keys() %}
+                            <option value="{{ codigo_ativo }}">{{ codigo_ativo }}</option>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                        </select>
+                    </div>
+                    <div id="dividendosAtivo">
+                        {% for codigo_ativo, dividendos in dividendos_por_codigo.items() %}
+                        <div class="ativo-dividendos" id="ativo-{{ codigo_ativo }}" {% if not loop.first %}style="display: none;"{% endif %}>
+                            <h4 class="mt-4">Dividendos de {{ codigo_ativo }}</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Categoria</th>
+                                        <th>Tipo</th>
+                                        <th>Quantidade</th>
+                                        <th>Valor</th>
+                                        <th>Valor Total</th>
+                                        <th>Valor Total Líquido</th>
+                                        <th>Data Com</th>
+                                        <th>Data Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dividendo in dividendos %}
+                                    <tr>
+                                        <td>{{ dividendo[2] }}</td>
+                                        <td>{{ dividendo[5] }}</td>
+                                        <td>{{ dividendo[6] }}</td>
+                                        <td>{{ dividendo[7] }}</td>
+                                        <td>{{ dividendo[8] }}</td>
+                                        <td>{{ dividendo[9] }}</td>
+                                        <td>{{ dividendo[10] }}</td>
+                                        <td>{{ dividendo[11] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endfor %}
+        
+                <!-- Aba Dividendos Por Mês -->
+                <div class="tab-pane fade" id="datas" role="tabpanel">
+                    <div class="form-group">
+                        <label for="selectDataTipo" class="h5">Selecione o Tipo de Data:</label>
+                        <select class="form-control" id="selectDataTipo">
+                            <option value="data_com">Data Com</option>
+                            <option value="data_pagamento">Data de Pagamento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectMes" class="h5">Selecione o Mês:</label>
+                        <input type="month" class="form-control" id="selectMes">
+                    </div>
+                    <button class="btn btn-primary mt-2" id="btnFiltrar">Filtrar</button>
+                    <div id="dividendosData" class="mt-3">
+                        <table class="table table-striped" id="tabelaDividendosFiltrados">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Tipo</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor</th>
+                                    <th>Valor Total</th>
+                                    <th>Valor Total Líquido</th>
+                                    <th>Data Com</th>
+                                    <th>Data Pagamento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Os dados filtrados serão inseridos aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

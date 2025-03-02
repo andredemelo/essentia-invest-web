@@ -127,6 +127,11 @@ def upload_dividendos():
 def dividendos():
     return dividendos_service.consulta_dividendos()
 
+@app.route('/filtrar_dividendos', methods=['GET'])
+@autenticacao_service.login_required
+def filtrar_dividendos():
+    return dividendos_service.filtrar_dividendos(request)
+
 @app.route('/logout')
 def logout():
     return autenticacao_service.efetua_logout()

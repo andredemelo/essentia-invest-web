@@ -1,3 +1,4 @@
+// Script para o gráfico de dividendos
 document.addEventListener("DOMContentLoaded", () => {
     const ctx = document.getElementById("dividendosChart").getContext("2d");
 
@@ -68,4 +69,47 @@ document.addEventListener("DOMContentLoaded", function () {
             ativoDiv.style.display = "block";
         }
     });
+});
+
+// Script para filtrar dividendos por mês
+document.getElementById("btnFiltrar").addEventListener("click", function () {
+    const tipoData = document.getElementById("selectDataTipo").value;
+    const mesSelecionado = document.getElementById("selectMes").value;
+
+    if (mesSelecionado) {
+        const url = `/filtrar_dividendos?tipo=${tipoData}&mes=${mesSelecionado}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const tabelaBody = document.querySelector("#tabelaDividendosFiltrados tbody");
+                tabelaBody.innerHTML = ""; // Limpa o conteúdo anterior
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Preenche a tabela com os dados filtrados
+                data.forEach(dividendo => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${dividendo.categoria}</td>
+                        <td>${dividendo.tipo}</td>
+                        <td>${dividendo.quantidade}</td>
+                        <td>${dividendo.valor}</td>
+                        <td>${dividendo.valor_total}</td>
+                        <td>${dividendo.valor_total_liquido}</td>
+                        <td>${dividendo.data_com}</td>
+                        <td>${dividendo.data_pagamento}</td>
+                    `;
+                    tabelaBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error("Erro ao filtrar dividendos:", error);
+                alert("Ocorreu um erro ao filtrar os dividendos.");
+            });
+    } else {
+        alert("Por favor, selecione um mês para filtrar.");
+    }
 });
