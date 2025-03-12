@@ -145,8 +145,8 @@ if __name__ == '__main__':
     init_db()
     
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=7, minute=30)
+    scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=18, minute=5)
     scheduler.start()
 
-    port = int(os.environ.get('PORT', 8080))
+    port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port)
