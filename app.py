@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session
+import os
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -147,4 +148,5 @@ if __name__ == '__main__':
     scheduler.add_job(scheduler_atualiza_preco_atual, 'cron', hour=7, minute=30)
     scheduler.start()
 
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port)
